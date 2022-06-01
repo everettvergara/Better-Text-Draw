@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+          "name": "Debug C/C++ (g++): Build Script",
+          "type": "lldb",
+          "request": "launch",
+          "program": "${fileDirname}/${fileBasenameNoExtension}",
+          "args": [],
+          "cwd": "${workspaceFolder}",
+          "preLaunchTask": "C/C++ (g++): Build Script"
+        },
+        {
+          "name": "Debug C/C++ (g++): Build Active Workspace",
+          "type": "lldb",
+          "request": "launch",
+          "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
+          "args": [],
+          "cwd": "${workspaceFolder}",
+          "preLaunchTask": "C/C++ (g++): Build Active Workspace"
+        },
+        {
+          "name": "Debug C/C++ (g++): Build SDL Workspace",
+          "type": "lldb",
+          "request": "launch",
+          "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
+          "args": [],
+          "cwd": "${workspaceFolder}",
+          "preLaunchTask": "C/C++ (g++): Build SDL Workspace"
+        },
+        {
+          "name": "Debug C (gcc): Build Script",
+          "type": "lldb",
+          "request": "launch",
+          "program": "${fileDirname}/${fileBasenameNoExtension}",
+          "args": [],
+          "cwd": "${workspaceFolder}",
+          "preLaunchTask": "C (gcc): Build Script"
+        },
+      ]
+}

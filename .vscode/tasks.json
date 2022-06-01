@@ -1,0 +1,243 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++ (g++): Build Script",
+            "command": "/usr/bin/g++",
+            "args": [
+
+                // Use only c++17 and up
+                "-std=c++17",
+
+                // Show pretty colors
+                "-fdiagnostics-color=always",
+                
+                // Don't do copy elision
+                // "-fno-elide-constructors",
+
+                // Turns on all warnings
+                "-Wall",
+
+                // Debugging options so GDB gives more friendly output
+                "-g3",
+                
+                // Maximum optimization -O3
+                "-O3",
+
+                // Assembly
+                // "-S",
+
+
+                // File to compile
+                "${file}",
+                // "./src/*.cpp",
+
+                // Include folder. Do this for each include
+                // "-I", 
+                // "${fileDirname}/include",
+
+                // Library folder. Do this for each library
+                // "-L", 
+                // "${fileDirname}/lib",
+                
+                // The library to link (link with library lib<library>.a)
+                // "-l"
+                // "library-name-here"
+
+                // Output an object file
+                // "-c",
+                // "${fileDirname}/${fileBasenameNoExtension}.o",
+
+                // Output executable file location
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build configuration for testing of features and scripts"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++ (g++): Build Active Workspace",
+            "command": "/usr/bin/g++",
+            "args": [
+
+                // Use only c++17 and up
+                "-std=c++17",
+
+                // Show pretty colors
+                "-fdiagnostics-color=always",
+                
+                // Don't do copy elision
+                // "-fno-elide-constructors",
+
+                // Turns on all warnings
+                "-Wall",
+
+                // Debugging options so GDB gives more friendly output
+                "-g3",
+                
+                // Maximum optimization -O3
+                // "-O3",
+                
+                // Assembly
+                // "-S",
+
+                // Include folder. Do this for each include
+                "-I", 
+                "${fileDirname}/include",
+
+                // File to compile
+                "${file}",
+                // "./src/*.cpp",
+
+                // Library folder. Do this for each library
+                // "-L", 
+                // "${fileDirname}/lib",
+                
+                // The library to link (link with library lib<library>.a)
+                // "-l"
+                // "library-name-here"
+
+                // Output an object file
+                // "-c",
+                // "${fileDirname}/bin/${fileBasenameNoExtension}.o",
+
+                // Output executable file location
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build configuration for testing of features and scripts"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++ (g++): Build SDL Workspace",
+            "command": "/usr/bin/g++",
+            "args": [
+
+                // Use only c++17 and up
+                "-std=c++17",
+
+                // Show pretty colors
+                "-fdiagnostics-color=always",
+                
+                // Don't do copy elision
+                // "-fno-elide-constructors",
+
+                // Turns on all warnings
+                "-Wall",
+
+                // Debugging options so GDB gives more friendly output
+                "-g3",
+                
+                // Maximum optimization -O3
+                // "-O3",
+
+                // Assembly
+                // "-S",
+
+
+                // Include folder. Do this for each include
+                "-I", 
+                "/Library/Frameworks/SDL2.framework/Headers",
+                
+                "-I",
+                "${fileDirname}/include",  
+                "-I",
+                "${fileDirname}/include/Demo",  
+                "-I",
+                "${fileDirname}/include/Motion",  
+
+
+                // File to compile
+                "${file}",
+
+                // Comment this if not using glad
+                // "./glad/src/glad.c",
+                // "./src/*.cpp",
+
+                // Library folder. Do this for each library
+                // "-L", 
+                // "${fileDirname}/lib",
+                
+                // The library to link (link with library lib<library>.a)
+                // "-l"
+                // "library-name-here"
+
+                // Output an object file
+                // "-c",
+                // "${fileDirname}/bin/${fileBasenameNoExtension}.o",
+
+                // Framework Library for SDL
+                "-F",
+                "/Library/Frameworks",    
+                "-framework",
+                "SDL2",         
+
+                // Output executable file location
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build configuration for testing of features and scripts"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C (gcc): Build Script",
+            "command": "/usr/bin/gcc",
+            "args": [
+
+                // File to compile
+                "${file}",
+                // "./src/*.cpp",
+
+                // Include folder. Do this for each include
+                // "-I", 
+                // "${fileDirname}/include",
+
+                // Library folder. Do this for each library
+                // "-L", 
+                // "${fileDirname}/lib",
+                
+                // The library to link (link with library lib<library>.a)
+                // "-l"
+                // "library-name-here"
+
+                // Output an object file
+                // "-c",
+                // "${fileDirname}/${fileBasenameNoExtension}.o",
+
+                // Assembly
+                // "-S",
+
+
+                // Output executable file location
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build configuration for testing of features and scripts"
+        },
+    ],
+    "version": "2.0.0"
+}
