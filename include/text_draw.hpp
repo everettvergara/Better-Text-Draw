@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <functional>
+#include <exception>
 
 namespace g80 {
     
@@ -14,9 +15,19 @@ namespace g80 {
     
     using expression_map = std::map<std::string, std::function<auto (const std::string &, const uint16_t) -> uint16_t>>;
     
+
     auto right(const std::string &command, const uint16_t i) -> uint16_t {
+        
+        return i;
     }
     auto catch_all(const std::string &command, const uint16_t i) -> uint16_t {
+        return i;
+    }
+    auto get_num(const std::string &command, uint16_t &i, std::string &num) -> void {
+        while(command[i] == ' ') ++i;
+        if (command[i] < '0' || command[i] > '9') throw("Expecting a number");
+        num = "0";
+        while (command[i] < '0' || command[i] > '9'))
     }
 
     class text_draw {
@@ -42,8 +53,8 @@ namespace g80 {
             expression_map_["arc"] = std::bind(catch_all, _1, _2);
             expression_map_["fil"] = std::bind(catch_all, _1, _2);
             expression_map_["t"] = std::bind(catch_all, _1, _2);
-            expression_map_["ctx"] = std::bind(catch_all, _1, _2);
-            expression_map_["cty"] = std::bind(catch_all, _1, _2);
+            expression_map_["tcx"] = std::bind(catch_all, _1, _2);
+            expression_map_["tcy"] = std::bind(catch_all, _1, _2);
 
         }
 
@@ -55,7 +66,6 @@ namespace g80 {
         bool wrap_around_ = true;
         uint8_t ch_{32};
         uint8_t col_{7};
-        // uint8_t ;
         uint16_t x_{0}, y_{0};
         uint16_t width_, height_, size_;
         std::vector<uint8_t> buffer_ch_;
