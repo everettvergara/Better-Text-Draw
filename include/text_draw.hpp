@@ -28,8 +28,8 @@ namespace g80 {
         text_draw(int_type width, int_type height) : 
         width_(width),
         height_(height),
-        buffer_ch_(width_ * height_, ' '),
-        buffer_col_(width_ * height_, 7) {
+        buffer_ch_(width_ * height_, ch_),
+        buffer_col_(width_ * height_, col_) {
             expression_map_["x"] = std::bind(catch_all, _1, _2);
             expression_map_["y"] = std::bind(catch_all, _1, _2);
             expression_map_["ch"] = std::bind(catch_all, _1, _2);
@@ -46,11 +46,14 @@ namespace g80 {
         }
 
     private:
+        int_type x_{0}, y_{0};
+        char ch_{' '};
+        uint8_t col_{7};
         int_type width_, height_;
         std::vector<char> buffer_ch_;
         std::vector<uint8_t> buffer_col_;
         expression_map expression_map_;
-        int_type x_, y_;
+        
 
     };
 }
