@@ -12,11 +12,11 @@ namespace g80 {
 
     using namespace std::placeholders;
     
-    using expression_map = std::map<std::string, std::function<void(const std::string &, const uint16_t)>>;
+    using expression_map = std::map<std::string, std::function<auto (const std::string &, const uint16_t) -> uint16_t>>;
     
-    auto right(const std::string &command, const uint16_t i) -> void {
+    auto right(const std::string &command, const uint16_t i) -> uint16_t {
     }
-    auto catch_all(const std::string &command, const uint16_t i) -> void {
+    auto catch_all(const std::string &command, const uint16_t i) -> uint16_t {
     }
 
     class text_draw {
@@ -55,6 +55,7 @@ namespace g80 {
         bool wrap_around_ = true;
         uint8_t ch_{32};
         uint8_t col_{7};
+        // uint8_t ;
         uint16_t x_{0}, y_{0};
         uint16_t width_, height_, size_;
         std::vector<uint8_t> buffer_ch_;
