@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include <functional>
 
 namespace g80 {
@@ -13,10 +14,16 @@ namespace g80 {
     
     class text_draw {
     public:
-        text_draw() {}
+        text_draw(int_type width, int_type height) : 
+        width_(width + 1),
+        height_(height),
+        buffer_(width_ * height_, ' ') {
+            for (int_type i = width_; i < width_ * height_; i += width_) buffer_[i] = '\n';
+        }
 
     private:
         int_type width_, height_;
+        std::string buffer_;
         expression_map expression_map_;
     };
 }
