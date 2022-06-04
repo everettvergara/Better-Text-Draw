@@ -257,7 +257,7 @@ namespace g80 {
             int16_t ady = dy < 0 ? dy * -1 : dy;
             
             if (adx >= ady) {    
-                for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
+                for (int16_t i = 0, t = ady; i < adx; ++i, t += ady) {
                     update_ch();
                     update_col();
 
@@ -267,8 +267,10 @@ namespace g80 {
                     }
                     pix_ +=sdx;
                 }
+                update_ch();
+                update_col();
             } else {
-                for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
+                for (int16_t i = 0, t = adx; i < ady; ++i, t += adx) {
                     update_ch();
                     update_col();
                     
@@ -278,6 +280,8 @@ namespace g80 {
                     }
                     pix_ += sdy;
                 }
+                update_ch();
+                update_col();                
             }
         }    
 
