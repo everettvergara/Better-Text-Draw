@@ -28,14 +28,14 @@ namespace g80 {
             expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
             expression_map_["ch"] = std::bind(&better_text_draw::set_ch, *this);
             expression_map_["col"] = std::bind(&better_text_draw::set_col, *this);
-            expression_map_["l"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["r"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["u"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["d"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["ul"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["ur"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["ll"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["lr"] = std::bind(&better_text_draw::catch_all, *this);
+            expression_map_["l"] = std::bind(&better_text_draw::draw_left, *this);
+            expression_map_["r"] = std::bind(&better_text_draw::draw_right, *this);
+            expression_map_["u"] = std::bind(&better_text_draw::draw_up, *this);
+            expression_map_["d"] = std::bind(&better_text_draw::draw_down, *this);
+            expression_map_["ul"] = std::bind(&better_text_draw::draw_upper_left, *this);
+            expression_map_["ur"] = std::bind(&better_text_draw::draw_upper_right, *this);
+            expression_map_["ll"] = std::bind(&better_text_draw::draw_lower_left, *this);
+            expression_map_["lr"] = std::bind(&better_text_draw::draw_lower_right, *this);
             expression_map_["arc"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["fil"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["t"] = std::bind(&better_text_draw::catch_all, *this);
@@ -76,6 +76,48 @@ namespace g80 {
             auto move = get_num();
             auto [x, y] = current_xy();
             line(x + move, y);
+        }
+
+        auto draw_left() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x - move, y);
+        }
+
+        auto draw_up() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x, y - move);
+        }
+
+        auto draw_down() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x, y + move);
+        }
+
+        auto draw_upper_left() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x - move, y - move);
+        }
+
+        auto draw_upper_right() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x + move, y - move);
+        }
+
+        auto draw_lower_right() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x + move, y + move);
+        }
+
+        auto draw_lower_left() -> void {
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x - move, y + move);
         }
 
     private: 
