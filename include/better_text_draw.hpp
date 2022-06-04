@@ -16,11 +16,12 @@ namespace g80 {
     class better_text_draw {
 
     public:
+
         better_text_draw(const uint16_t width, const uint16_t height, const std::string &command) : 
-        width_(width), height_(height), size_(width_ * height_),
-        buffer_ch_(width_ * height_, ch_),
-        buffer_col_(width_ * height_, col_),
-        command_(command) {
+            width_(width), height_(height), size_(width_ * height_),
+            buffer_ch_(width_ * height_, ch_),
+            buffer_col_(width_ * height_, col_),
+            command_(command) {
 
             expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
             expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
@@ -42,6 +43,7 @@ namespace g80 {
         }
 
     private:
+
         uint8_t ch_{32};
         uint8_t col_{7};
         uint16_t ix_{0};
@@ -53,6 +55,7 @@ namespace g80 {
         expression_map expression_map_;
 
     private:
+
         auto set_x() -> void {
             x_ = get_num();
         }
@@ -64,12 +67,17 @@ namespace g80 {
         auto set_ch() -> void {
             ch_ = get_ch();
         }
-        
+
         auto set_col() -> void {
             col_ = get_num();
         }
 
+        auto draw_right() -> void {
+            
+        }
+
     private: 
+
         auto throw_if_end_is_reached() -> void {
             if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
         }
@@ -77,6 +85,42 @@ namespace g80 {
         auto throw_if_is_not_number() -> void {
             if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
         }
+
+    private:
+
+        auto line(int16_t x1, int16_t y1, int16_t x2, int16_t y2) -> void {
+            int16_t dx = x2 - x1;
+            int16_t dy = y2 - y1;
+            int16_t sdx = dx < 0 ? -1 : 1;
+            int16_t sdy = dy < 0 ? -width_ : width_;
+            int16_t adx = dx < 0 ? dx * -1 : dx;
+            int16_t ady = dy < 0 ? dy * -1 : dy;
+            int16_t curr_point = ix(x1, y1);
+            
+            if (adx >= ady) {    
+                for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
+                    buffer_ch_[curr_point] = ch_;
+                    buffer_col_[curr_point] = col_;
+
+                    if (t >= adx) {
+                        curr_point += sdy;
+                        t -= adx;
+                    }
+                    curr_point +=sdx;
+                }
+            } else {
+                for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
+                    buffer_ch_[curr_point] = ch_;
+                    buffer_col_[curr_point] = col_;
+                    
+                    if (t >= ady) {
+                        curr_point += sdx;
+                        t -= ady;
+                    }
+                    curr_point += sdy;
+                }
+            }
+        }    
 
     private:
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
