@@ -57,11 +57,11 @@ namespace g80 {
     private:
 
         auto set_x() -> void {
-            auto x = get_num();
+            ix_ = ix(get_num(), current_y());
         }
 
         auto set_y() -> void {
-            auto y = get_num();
+            ix_ = ix(current_x(), get_num());
         }
 
         auto set_ch() -> void {
@@ -75,7 +75,7 @@ namespace g80 {
         auto draw_right() -> void {
             auto move = get_num();
             auto [x, y] = current_xy();
-            line(x, y);
+            line(x + move, y);
         }
 
     private: 
@@ -125,10 +125,17 @@ namespace g80 {
 
     private:
 
-        auto current_xy() const -> std::tuple<int16_t, int16_t> {
-            int16_t x = ix_ % size_;
-            int16_t y = ix_ / size_;
-            return {x, y};
+
+        inline auto current_x() const -> int16_t {
+            return ix_ % size_;
+        }
+        
+        inline auto current_y() const -> int16_t {
+            return ix_ / size_;
+        }
+
+        inline auto current_xy() const -> std::tuple<int16_t, int16_t> {
+            return {current_x(), current_y()};
         }
 
         inline auto ix(const int16_t x, const int16_t y) const -> const int16_t {
