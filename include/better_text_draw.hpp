@@ -27,23 +27,23 @@ namespace g80 {
             command_(command) {
 
             // TODO: Could be a template? WHY? so expressionmap can be made static per widht_ height
-            expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
-            expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
-            expression_map_["ch"] = std::bind(&better_text_draw::set_ch, *this);
-            expression_map_["col"] = std::bind(&better_text_draw::set_col, *this);
-            expression_map_["l"] = std::bind(&better_text_draw::draw_left, *this);
-            expression_map_["r"] = std::bind(&better_text_draw::draw_right, *this);
-            expression_map_["u"] = std::bind(&better_text_draw::draw_up, *this);
-            expression_map_["d"] = std::bind(&better_text_draw::draw_down, *this);
-            expression_map_["ul"] = std::bind(&better_text_draw::draw_upper_left, *this);
-            expression_map_["ur"] = std::bind(&better_text_draw::draw_upper_right, *this);
-            expression_map_["ll"] = std::bind(&better_text_draw::draw_lower_left, *this);
-            expression_map_["lr"] = std::bind(&better_text_draw::draw_lower_right, *this);
-            expression_map_["arc"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["fil"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["t"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, *this);
+            expression_map_["x"] = std::bind(&better_text_draw::set_x, this);
+            expression_map_["y"] = std::bind(&better_text_draw::set_y, this);
+            expression_map_["ch"] = std::bind(&better_text_draw::set_ch, this);
+            expression_map_["col"] = std::bind(&better_text_draw::set_col, this);
+            expression_map_["l"] = std::bind(&better_text_draw::draw_left, this);
+            expression_map_["r"] = std::bind(&better_text_draw::draw_right, this);
+            expression_map_["u"] = std::bind(&better_text_draw::draw_up, this);
+            expression_map_["d"] = std::bind(&better_text_draw::draw_down, this);
+            expression_map_["ul"] = std::bind(&better_text_draw::draw_upper_left, this);
+            expression_map_["ur"] = std::bind(&better_text_draw::draw_upper_right, this);
+            expression_map_["ll"] = std::bind(&better_text_draw::draw_lower_left, this);
+            expression_map_["lr"] = std::bind(&better_text_draw::draw_lower_right, this);
+            expression_map_["arc"] = std::bind(&better_text_draw::catch_all, this);
+            expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this);
+            expression_map_["t"] = std::bind(&better_text_draw::catch_all, this);
+            expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this);
+            expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this);
         }
 
         // TODO: check if command / ix need not be instance of the class
@@ -52,7 +52,6 @@ namespace g80 {
                 cix_ = 0;
                 do {
                     std::string command = get_command();
-                    // std::cout << "command: " << command << "\n";
                     auto f = expression_map_.find(command);
                     if (f != expression_map_.end()) {
                         (f->second)();
@@ -178,10 +177,7 @@ namespace g80 {
 
         auto throw_if_is_not_number() const -> void {
 
-            if (is_not_number(command_[cix_])) {
-                std::cout << "- " << command_[cix_] << "\n";
-                throw("not a number\n");
-            }
+            if (is_not_number(command_[cix_])) {throw(std::string("Expecting a number at i:") + std::to_string(cix_));}
         }
 
         auto throw_if_is_not_ch() const -> void {
@@ -285,7 +281,6 @@ namespace g80 {
                 num *= 10;
                 num += command_[cix_++] - '0';
             }
-            std::cout << "after while()\n";
 
             return num;
         }
