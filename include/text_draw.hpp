@@ -16,14 +16,6 @@ namespace g80 {
     using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
 
 
-    inline auto is_number(const uint8_t ch) -> bool {
-        return ch >= '0' && ch <= '9';
-    }
-
-    inline auto is_not_number(const uint8_t ch) -> bool {
-        return ch < '0' || ch > '9';
-    }
-
     auto get_num(const std::string &command, uint16_t &i, uint16_t &num) -> bool {
         
         uint16_t num = 0;
@@ -95,9 +87,22 @@ namespace g80 {
             return ix_ == command_.size();
         }
 
-        inline auto skip_spaces() -> void {
-            while(!end_is_reached() && command[ix_++] == ' ');
+        inline auto end_is_not_reached -> bool {
+            return ix_ == command_.size();
         }
+
+        inline auto skip_spaces() -> void {
+            while(end_is_not_reached() && command[ix_++] == ' ');
+        }
+
+        inline auto is_number(const uint8_t ch) -> bool {
+            return ch >= '0' && ch <= '9';
+        }
+
+        inline auto is_not_number(const uint8_t ch) -> bool {
+            return ch < '0' || ch > '9';
+        }
+
     };
 }
 #endif 
