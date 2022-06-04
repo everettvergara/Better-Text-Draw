@@ -1,8 +1,9 @@
 #include <iostream>
 #include <map>
-#include "text_draw.hpp"
+#include "better_text_draw.hpp"
+
 using namespace g80;
 auto main(const int argc, const char *argv[]) -> int {
-    text_draw td(10, 10, "    r10");
+    better_text_draw btd(10, 10, "    r10");
 }
 
