@@ -15,12 +15,22 @@ namespace g80 {
     using namespace std::placeholders;
     using expression_map = std::map<std::string, std::function<auto (const std::string &, int16_t &) -> void>>;
 
+    template<typename T, T less_than>
+    class validator_if_less_than {
+    public:
+        validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid dimensions"));}
+        operator const T &(void) const {return n_;}   
+    private:
+        T n_;
+    };
+
     class better_text_draw {
 
     public:
-
-        // THROW if size = 0
-        better_text_draw(const int16_t width, const int16_t height, const uint8_t ch = '.', const uint16_t col = 7) : 
+        better_text_draw(
+            validator_if_less_than<int16_t, 1> width, 
+            validator_if_less_than<int16_t, 1> height, 
+            const uint8_t ch = '.', const uint16_t col = 7) : 
             width_(width), height_(height), size_(width_ * height_),
             ch_(ch), col_(col),
             buffer_ch_(width_ * height_, ch_),
