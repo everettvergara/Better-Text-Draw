@@ -91,13 +91,12 @@ namespace g80 {
         std::vector<uint8_t> buffer_col_;
         expression_map expression_map_;
 
-        auto end_is_reached -> bool {
-            return ix_ == command_;
+        inline auto end_is_reached -> bool {
+            return ix_ == command_.size();
         }
 
-        auto skip_spaces() -> bool {
-            while(command[ix_] == ' ') if (++ix_ == command.size()) return false;
-            return true;
+        inline auto skip_spaces() -> void {
+            while(!end_is_reached() && command[ix_++] == ' ');
         }
     };
 }
