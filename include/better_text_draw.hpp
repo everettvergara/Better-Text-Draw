@@ -8,6 +8,7 @@
 #include <functional>
 #include <exception>
 #include <tuple>
+#include <sstream>
 
 namespace g80 {
     
@@ -18,12 +19,14 @@ namespace g80 {
 
     public:
 
+        // THROW if size = 0
         better_text_draw(const int16_t width, const int16_t height, const std::string &command) : 
             width_(width), height_(height), size_(width_ * height_),
             buffer_ch_(width_ * height_, ch_),
             buffer_col_(width_ * height_, col_),
             command_(command) {
 
+            // TODO: Could be a template? WHY? so expressionmap can be made static per widht_ height
             expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
             expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
             expression_map_["ch"] = std::bind(&better_text_draw::set_ch, *this);
@@ -43,6 +46,25 @@ namespace g80 {
             expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, *this);
         }
 
+        auto show(bool clear_screen = false) -> void {
+            // todo: all size vars should be changed to size_t
+            std::stringstream output;
+            if (clear_screen) output << "\033[2J";
+            
+            int16_t next_line = width_, i = 0, current_color = -1;
+            do {
+                if (current_color != buffer_col_[i]) {
+                    current_color = buffer_col_[i];
+                    output << color_[current_color];
+                }
+
+                output << buffer_ch_[i++];
+                if (i == next_line) {output << "\n"; next_line += width_;}
+            } while (i != size_);
+
+            output << "\033[0m\n";
+            std::cout << output.str();
+        }
     private:
 
         uint8_t ch_{32};
@@ -54,6 +76,9 @@ namespace g80 {
         const std::string command_;
         expression_map expression_map_;
 
+        static const std::string color_[];
+        static const size_t sizeof_color;
+            
     private:
 
         auto set_x() -> void {
@@ -69,7 +94,8 @@ namespace g80 {
         }
 
         auto set_col() -> void {
-            col_ = get_num();
+            auto t = get_num();
+            col_ = t > sizeof_color_ ? t % sizeof_color : t;
         }
 
         auto draw_right() -> void {
@@ -244,5 +270,8 @@ namespace g80 {
 
         }
     };
+
+    const std::string better_text_draw::color_[] { "\033[30m", "\033[31m", "\033[32m", "\033[33m", "\033[34m", "\033[35m", "\033[36m", "\033[37m" };
+    const size_t sizeof_color_{sizeof(color_) / sizeof(std::string)};
 }
 #endif 
