@@ -15,11 +15,15 @@ namespace g80 {
     
     using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
     
+    inline auto i(const std::string &command, uint16_t &i) -> bool {
+        return ++i < command.size();
+    }
+
     auto skip_spaces(const std::string &command, uint16_t &i) -> bool {
         while(command[i] == ' ') if (++i == command.size()) return false;
         return true;
     }
-    
+
     inline auto is_number(const uint8_t ch) -> bool {
         return ch >= '0' && ch <= '9';
     }
@@ -29,18 +33,21 @@ namespace g80 {
     }
 
     auto get_num(const std::string &command, uint16_t &i, uint16_t &num) -> bool {
-        if (!skip_spaces(command, i)) return false;
-        if (command[i] < '0' || command[i] > '9') throw("Expecting a number at i: %d");
+        
         uint16_t num = 0;
-        while (command[i] >= '0' && command[i] <= '9') {
+        if (!skip_spaces(command, i)) return false;
+        if (is_not_number(command[i])) throw(std::string("Expecting a number at i:") + i + ". btd cannot continue.");
+        
+        while (is_number(command[i])) {
             num *= 10;
             num += command[i] - '0';
             if (++i == command.size()) return false;
         }
+
         return true;
     }
-    auto right(const std::string &command, uint16_t i) -> bool {
-        auto num = get_num(command, i);
+    auto right(const std::string &command, uint16_t &i) -> bool {
+        get_num(command, i, num);
         return i < command.size();
     }
     auto catch_all(const std::string &command, uint16_t i) -> bool {
@@ -83,6 +90,8 @@ namespace g80 {
         bool wrap_around_ = true;
         uint8_t ch_{32};
         uint8_t col_{7};
+        uint16_t ix_{0};
+        std::string command_;
         uint16_t x_{0}, y_{0};
         uint16_t width_, height_, size_;
         std::vector<uint8_t> buffer_ch_;
