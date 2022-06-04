@@ -13,22 +13,40 @@ namespace g80 {
 
     using namespace std::placeholders;
     
-    using expression_map = std::map<std::string, std::function<auto (const std::string &, const uint16_t) -> uint16_t>>;
+    using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
     
+    auto skip_spaces(const std::string &command, uint16_t &i) -> bool {
+        while(command[i] == ' ') if (++i == command.size()) return false;
+        return true;
+    }
+    
+    inline auto is_number(const uint8_t ch) -> bool {
+        return ch >= '0' && ch <= '9';
+    }
 
-    auto right(const std::string &command, const uint16_t i) -> uint16_t {
-        
-        return i;
+    inline auto is_not_number(const uint8_t ch) -> bool {
+        return ch < '0' || ch > '9';
     }
-    auto catch_all(const std::string &command, const uint16_t i) -> uint16_t {
-        return i;
+
+    auto get_num(const std::string &command, uint16_t &i, uint16_t &num) -> bool {
+        if (!skip_spaces(command, i)) return false;
+        if (command[i] < '0' || command[i] > '9') throw("Expecting a number at i: %d");
+        uint16_t num = 0;
+        while (command[i] >= '0' && command[i] <= '9') {
+            num *= 10;
+            num += command[i] - '0';
+            if (++i == command.size()) return false;
+        }
+        return true;
     }
-    auto get_num(const std::string &command, uint16_t &i, std::string &num) -> void {
-        while(command[i] == ' ') ++i;
-        if (command[i] < '0' || command[i] > '9') throw("Expecting a number");
-        num = "0";
-        while (command[i] < '0' || command[i] > '9'))
+    auto right(const std::string &command, uint16_t i) -> bool {
+        auto num = get_num(command, i);
+        return i < command.size();
     }
+    auto catch_all(const std::string &command, uint16_t i) -> bool {
+        return i < command.size();
+    }
+    
 
     class text_draw {
     public:
@@ -55,7 +73,6 @@ namespace g80 {
             expression_map_["t"] = std::bind(catch_all, _1, _2);
             expression_map_["tcx"] = std::bind(catch_all, _1, _2);
             expression_map_["tcy"] = std::bind(catch_all, _1, _2);
-
         }
 
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
