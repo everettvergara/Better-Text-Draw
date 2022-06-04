@@ -73,7 +73,7 @@ namespace g80 {
         }
 
         auto draw_right() -> void {
-            
+
         }
 
     private: 
@@ -123,6 +123,7 @@ namespace g80 {
         }    
 
     private:
+
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
@@ -169,6 +170,16 @@ namespace g80 {
             throw_if_end_is_reached();
             
             return command_[ix_++];
+        }
+
+        auto set_ch(uint16_t i, uint8_t ch) -> void {
+            if (i >= size_) i %= size_;
+            buffer_ch_[i] = ch;
+        }
+        
+        auto set_col(uint16_t i, uint16_t col) -> void {
+            if (i >= size_) i %= size_;
+            buffer_col_[i] = col;
         }
 
         auto catch_all() -> void {
