@@ -13,21 +13,17 @@ namespace g80 {
     using namespace std::placeholders;
     using expression_map = std::map<std::string, std::function<auto () -> void>>;
 
-
-
-
     class better_text_draw {
 
     public:
         better_text_draw(const uint16_t width, const uint16_t height, const std::string &command) : 
-        width_(width),
-        height_(height),
-        size_(width_ * height_),
+        width_(width), height_(height), size_(width_ * height_),
         buffer_ch_(width_ * height_, ch_),
         buffer_col_(width_ * height_, col_),
         command_(command) {
-            expression_map_["x"] = std::bind(&better_text_draw::catch_all, *this);
-            expression_map_["y"] = std::bind(&better_text_draw::catch_all, *this);
+
+            expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
+            expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
             expression_map_["ch"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["col"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["l"] = std::bind(&better_text_draw::catch_all, *this);
@@ -45,8 +41,6 @@ namespace g80 {
             expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, *this);
         }
 
-
-
     private:
         uint8_t ch_{32};
         uint8_t col_{7};
@@ -59,32 +53,33 @@ namespace g80 {
         expression_map expression_map_;
 
     private:
-        
+        auto set_x() -> void {
+            x_ = get_num();
+        }
+        auto set_y() -> void {
+            y_ = get_num();
+        }
+
+    private:
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
         }
-
         inline auto end_is_reached() -> bool {
             return ix_ == command_.size();
         }
-
         inline auto end_is_not_reached() -> bool {
             return ix_ < command_.size();
         }
-
         inline auto skip_spaces() -> void {
             while(end_is_not_reached() && command_[ix_++] == ' ');
         }
-
         inline auto is_number(const uint8_t ch) -> bool {
             return ch >= '0' && ch <= '9';
         }
-
         inline auto is_not_number(const uint8_t ch) -> bool {
             return ch < '0' || ch > '9';
         }
-
         auto get_num() -> uint16_t {
             
             uint16_t num = 0;
