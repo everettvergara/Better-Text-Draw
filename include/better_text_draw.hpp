@@ -26,7 +26,6 @@ namespace g80 {
             buffer_ch_(width_ * height_, ch_),
             buffer_col_(width_ * height_, col_) {
 
-            // TODO: Could be a template? WHY? so expressionmap can be made static per widht_ height
             expression_map_["x"] = std::bind(&better_text_draw::set_x, this, _1, _2);
             expression_map_["y"] = std::bind(&better_text_draw::set_y, this, _1, _2);
             expression_map_["ch"] = std::bind(&better_text_draw::set_ch, this, _1, _2);
@@ -39,6 +38,16 @@ namespace g80 {
             expression_map_["ur"] = std::bind(&better_text_draw::draw_upper_right, this, _1, _2);
             expression_map_["ll"] = std::bind(&better_text_draw::draw_lower_left, this, _1, _2);
             expression_map_["lr"] = std::bind(&better_text_draw::draw_lower_right, this, _1, _2);
+            
+            expression_map_["ml"] = std::bind(&better_text_draw::move_left, this, _1, _2);
+            expression_map_["mr"] = std::bind(&better_text_draw::move_right, this, _1, _2);
+            expression_map_["mu"] = std::bind(&better_text_draw::move_up, this, _1, _2); 
+            expression_map_["md"] = std::bind(&better_text_draw::move_down, this, _1, _2);
+            expression_map_["mul"] = std::bind(&better_text_draw::move_upper_left, this, _1, _2);
+            expression_map_["mur"] = std::bind(&better_text_draw::move_upper_right, this, _1, _2);
+            expression_map_["mll"] = std::bind(&better_text_draw::move_lower_left, this, _1, _2);
+            expression_map_["mlr"] = std::bind(&better_text_draw::move_lower_right, this, _1, _2);
+            
             expression_map_["arc"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             expression_map_["t"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
@@ -69,7 +78,6 @@ namespace g80 {
         }
 
         auto show(bool clear_screen = false) const -> void {
-            // todo: all size vars should be changed to size_t
             std::stringstream output;
             if (clear_screen) output << "\033[2J";
             
@@ -99,7 +107,7 @@ namespace g80 {
         expression_map expression_map_;
 
         static const std::string color_[];
-        static const size_t sizeof_color_;
+        static const uint8_t sizeof_color_;
             
     private:
 
@@ -166,6 +174,54 @@ namespace g80 {
             auto move = get_num_from_command(command, cix);
             auto [x, y] = current_xy();
             line(x - move, y + move);
+        }
+
+        auto move_right(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x + move, y);
+        }
+
+        auto move_left(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x - move, y);
+        }
+
+        auto move_up(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x, y - move);
+        }
+
+        auto move_down(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x, y + move);
+        }
+
+        auto move_upper_left(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x - move, y - move);
+        }
+
+        auto move_upper_right(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x + move, y - move);
+        }
+
+        auto move_lower_right(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x + move, y + move);
+        }
+
+        auto move_lower_left(const std::string &command, int16_t &cix) -> void {
+            auto move = get_num_from_command(command, cix);
+            auto [x, y] = current_xy();
+            pix_ = ix(x - move, y + move);
         }
 
         auto catch_all(const std::string &command, int16_t &cix) -> void {
@@ -302,6 +358,6 @@ namespace g80 {
     };
 
     const std::string better_text_draw::color_[] { "\033[30m", "\033[31m", "\033[32m", "\033[33m", "\033[34m", "\033[35m", "\033[36m", "\033[37m" };
-    const size_t better_text_draw::sizeof_color_{sizeof(better_text_draw::color_) / sizeof(std::string)};
+    const uint8_t better_text_draw::sizeof_color_{sizeof(better_text_draw::color_) / sizeof(std::string)};
 }
 #endif 
