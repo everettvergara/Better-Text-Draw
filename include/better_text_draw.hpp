@@ -59,7 +59,8 @@ namespace g80 {
                         std::cout << "command not found -> " << command << std::endl;
                         return false;
                     }
-                } while (cix_ != size_);
+                    std::cout << "--" << cix_ << " / " << size_ << "\n";
+                } while (cix_ < command_.size());
 
             } catch (std::exception e) {
                 std::cout << "error" << std::endl;
@@ -113,7 +114,10 @@ namespace g80 {
         }
 
         auto set_ch() -> void {
+            std::cout << "ch";
             ch_ = get_ch_from_command();
+            std::cout << ch_ << "\n";
+
         }
 
         auto set_col() -> void {
@@ -122,7 +126,9 @@ namespace g80 {
         }
 
         auto draw_right() -> void {
+            std::cout << "r";
             auto move = get_num_from_command();
+            std::cout << move << "\n";
             auto [x, y] = current_xy();
             line(x + move, y);
         }
