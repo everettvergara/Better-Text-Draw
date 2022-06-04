@@ -133,36 +133,38 @@ namespace g80 {
     private:
 
         auto line(const int16_t x, const int16_t y) -> void {
-            // int16_t dx = x2 - x_;
-            // int16_t dy = y2 - y_;
-            // int16_t sdx = dx < 0 ? -1 : 1;
-            // int16_t sdy = dy < 0 ? -1 : 1;
-            // int16_t adx = dx < 0 ? dx * -1 : dx;
-            // int16_t ady = dy < 0 ? dy * -1 : dy;
-            
-            // if (adx >= ady) {    
-            //     for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
-            //         update_ch();
-            //         update_col();
 
-            //         if (t >= adx) {
-            //             curr_point += sdy;
-            //             t -= adx;
-            //         }
-            //         curr_point +=sdx;
-            //     }
-            // } else {
-            //     for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
-            //         update_ch();
-            //         update_col();
+            auto [cx, cy] = current_xy();
+            int16_t dx = x - cx;
+            int16_t dy = y - cy;
+            int16_t sdx = dx < 0 ? -1 : 1;
+            int16_t sdy = dy < 0 ? -width_ : width_;
+            int16_t adx = dx < 0 ? dx * -1 : dx;
+            int16_t ady = dy < 0 ? dy * -1 : dy;
+            
+            if (adx >= ady) {    
+                for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
+                    update_ch();
+                    update_col();
+
+                    if (t >= adx) {
+                        ix_ += sdy;
+                        t -= adx;
+                    }
+                    ix_ +=sdx;
+                }
+            } else {
+                for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
+                    update_ch();
+                    update_col();
                     
-            //         if (t >= ady) {
-            //             curr_point += sdx;
-            //             t -= ady;
-            //         }
-            //         curr_point += sdy;
-            //     }
-            // }
+                    if (t >= ady) {
+                        ix_ += sdx;
+                        t -= ady;
+                    }
+                    ix_ += sdy;
+                }
+            }
         }    
 
     private:
