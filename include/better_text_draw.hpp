@@ -7,6 +7,7 @@
 #include <vector>
 #include <functional>
 #include <exception>
+#include <tuple>
 
 namespace g80 {
     
@@ -17,7 +18,7 @@ namespace g80 {
 
     public:
 
-        better_text_draw(const uint16_t width, const uint16_t height, const std::string &command) : 
+        better_text_draw(const int16_t width, const int16_t height, const std::string &command) : 
             width_(width), height_(height), size_(width_ * height_),
             buffer_ch_(width_ * height_, ch_),
             buffer_col_(width_ * height_, col_),
@@ -46,9 +47,8 @@ namespace g80 {
 
         uint8_t ch_{32};
         uint8_t col_{7};
-        uint16_t ix_{0};
-        uint16_t x_{0}, y_{0};
-        uint16_t width_, height_, size_;
+        int16_t ix_{0};
+        int16_t width_, height_, size_;
         std::vector<uint8_t> buffer_ch_;
         std::vector<uint8_t> buffer_col_;
         const std::string command_;
@@ -57,11 +57,11 @@ namespace g80 {
     private:
 
         auto set_x() -> void {
-            x_ = get_num();
+            auto x = get_num();
         }
 
         auto set_y() -> void {
-            y_ = get_num();
+            auto y = get_num();
         }
 
         auto set_ch() -> void {
@@ -73,7 +73,9 @@ namespace g80 {
         }
 
         auto draw_right() -> void {
-
+            auto move = get_num();
+            auto [x, y] = current_xy();
+            line(x, y);
         }
 
     private: 
@@ -88,43 +90,48 @@ namespace g80 {
 
     private:
 
-        auto line(int16_t x1, int16_t y1, int16_t x2, int16_t y2) -> void {
-            int16_t dx = x2 - x1;
-            int16_t dy = y2 - y1;
-            int16_t sdx = dx < 0 ? -1 : 1;
-            int16_t sdy = dy < 0 ? -width_ : width_;
-            int16_t adx = dx < 0 ? dx * -1 : dx;
-            int16_t ady = dy < 0 ? dy * -1 : dy;
-            int16_t curr_point = ix(x1, y1);
+        auto line(const int16_t x, const int16_t y) -> void {
+            // int16_t dx = x2 - x_;
+            // int16_t dy = y2 - y_;
+            // int16_t sdx = dx < 0 ? -1 : 1;
+            // int16_t sdy = dy < 0 ? -1 : 1;
+            // int16_t adx = dx < 0 ? dx * -1 : dx;
+            // int16_t ady = dy < 0 ? dy * -1 : dy;
             
-            if (adx >= ady) {    
-                for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
-                    buffer_ch_[curr_point] = ch_;
-                    buffer_col_[curr_point] = col_;
+            // if (adx >= ady) {    
+            //     for (int16_t i = 0, t = ady; i <= adx; ++i, t += ady) {
+            //         update_ch();
+            //         update_col();
 
-                    if (t >= adx) {
-                        curr_point += sdy;
-                        t -= adx;
-                    }
-                    curr_point +=sdx;
-                }
-            } else {
-                for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
-                    buffer_ch_[curr_point] = ch_;
-                    buffer_col_[curr_point] = col_;
+            //         if (t >= adx) {
+            //             curr_point += sdy;
+            //             t -= adx;
+            //         }
+            //         curr_point +=sdx;
+            //     }
+            // } else {
+            //     for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
+            //         update_ch();
+            //         update_col();
                     
-                    if (t >= ady) {
-                        curr_point += sdx;
-                        t -= ady;
-                    }
-                    curr_point += sdy;
-                }
-            }
+            //         if (t >= ady) {
+            //             curr_point += sdx;
+            //             t -= ady;
+            //         }
+            //         curr_point += sdy;
+            //     }
+            // }
         }    
 
     private:
 
-        inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
+        auto current_xy() -> std::tuple<int16_t, int16_t> {
+            int16_t x = ix_ % size_;
+            int16_t y = ix_ / size_;
+            return {x, y};
+        }
+
+        inline auto ix(const int16_t x, const int16_t y) const -> const int16_t {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
         }
@@ -149,13 +156,13 @@ namespace g80 {
             return ch < '0' || ch > '9';
         }
 
-        auto get_num() -> uint16_t {
+        auto get_num() -> int16_t {
             
             skip_spaces();
             throw_if_end_is_reached();
             throw_if_is_not_number();            
             
-            uint16_t num = 0;
+            int16_t num = 0;
             while (end_is_not_reached() && is_number(command_[ix_])) {
                 num *= 10;
                 num += command_[ix_++] - '0';
@@ -172,14 +179,14 @@ namespace g80 {
             return command_[ix_++];
         }
 
-        auto set_ch(uint16_t i, uint8_t ch) -> void {
-            if (i >= size_) i %= size_;
-            buffer_ch_[i] = ch;
+        auto update_ch() -> void {
+            if (ix_ >= size_) ix_ %= size_;
+            buffer_ch_[ix_] = ch_;
         }
         
-        auto set_col(uint16_t i, uint16_t col) -> void {
-            if (i >= size_) i %= size_;
-            buffer_col_[i] = col;
+        auto update_col() -> void {
+            if (ix_ >= size_) ix_ %= size_;
+            buffer_col_[ix_] = col_;
         }
 
         auto catch_all() -> void {
