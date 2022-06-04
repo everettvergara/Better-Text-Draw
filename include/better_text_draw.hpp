@@ -80,11 +80,11 @@ namespace g80 {
 
     private: 
 
-        auto throw_if_end_is_reached() -> void {
+        auto throw_if_end_is_reached() const -> void {
             if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
         }
 
-        auto throw_if_is_not_number() -> void {
+        auto throw_if_is_not_number() const -> void {
             if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
         }
 
@@ -125,7 +125,7 @@ namespace g80 {
 
     private:
 
-        auto current_xy() -> std::tuple<int16_t, int16_t> {
+        auto current_xy() const -> std::tuple<int16_t, int16_t> {
             int16_t x = ix_ % size_;
             int16_t y = ix_ / size_;
             return {x, y};
@@ -136,11 +136,11 @@ namespace g80 {
             return t >= size_ ? t % size_ : t;
         }
 
-        inline auto end_is_reached() -> bool {
+        inline auto end_is_reached() const -> bool {
             return ix_ == command_.size();
         }
 
-        inline auto end_is_not_reached() -> bool {
+        inline auto end_is_not_reached() const -> bool {
             return ix_ < command_.size();
         }
 
@@ -148,11 +148,11 @@ namespace g80 {
             while(end_is_not_reached() && command_[ix_++] == ' ');
         }
 
-        inline auto is_number(const uint8_t ch) -> bool {
+        inline auto is_number(const uint8_t ch) const -> bool {
             return ch >= '0' && ch <= '9';
         }
 
-        inline auto is_not_number(const uint8_t ch) -> bool {
+        inline auto is_not_number(const uint8_t ch) const -> bool {
             return ch < '0' || ch > '9';
         }
 
