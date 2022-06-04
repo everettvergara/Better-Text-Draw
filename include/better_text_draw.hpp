@@ -52,8 +52,8 @@ namespace g80 {
             
                 do {
                     std::string exp = get_command(command, cix);
-                    auto f = expression_map_.find(command);
-                    if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> ") + command + "\n");
+                    auto f = expression_map_.find(exp);
+                    if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> ") + exp + "\n");
                     
                     (f->second)(command, cix);
                     skip_spaces(command, cix);
@@ -61,7 +61,7 @@ namespace g80 {
 
                 return true;
 
-            } catch (std::exception e) {
+            } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 return false;
             }
@@ -86,8 +86,8 @@ namespace g80 {
             output << "\033[0m\n";
             std::cout << output.str();
         }
-    private:
 
+    private:
         uint8_t ch_{32};
         uint8_t col_{7};
         int16_t pix_{0};
@@ -119,7 +119,6 @@ namespace g80 {
         }
 
         auto draw_right(const std::string &command, int16_t &cix) -> void {
-            std::cout << "r";
             auto move = get_num_from_command(command, cix);
             auto [x, y] = current_xy();
             line(x + move, y);
@@ -297,7 +296,7 @@ namespace g80 {
             return {current_x(), current_y()};
         }
 
-        inline auto ix(const int16_t x, const int16_t y) const -> const int16_t {
+        inline auto ix(const int16_t x, const int16_t y) const -> int16_t {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
         }
