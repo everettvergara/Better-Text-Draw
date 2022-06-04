@@ -49,17 +49,21 @@ namespace g80 {
         // TODO: check if command / ix need not be instance of the class
         auto eval() -> bool {
             try {
+                cix_ = 0;
                 do {
                     std::string command = get_command();
+                    // std::cout << "command: " << command << "\n";
                     auto f = expression_map_.find(command);
-                    if (f == expression_map_.end()) {
+                    if (f != expression_map_.end()) {
+                        (f->second)();
+                    } else {
                         std::cout << "command not found -> " << command << std::endl;
                         return false;
                     }
-                } while (++ix_ != size_);
+                } while (cix_ != size_);
 
             } catch (std::exception e) {
-                std::cout << e.what() << std::endl;
+                std::cout << "error" << std::endl;
                 return false;
             }
 
@@ -89,7 +93,7 @@ namespace g80 {
 
         uint8_t ch_{32};
         uint8_t col_{7};
-        int16_t ix_{0};
+        int16_t pix_{0}, cix_{0};
         int16_t width_, height_, size_;
         std::vector<uint8_t> buffer_ch_;
         std::vector<uint8_t> buffer_col_;
@@ -102,66 +106,66 @@ namespace g80 {
     private:
 
         auto set_x() -> void {
-            ix_ = ix(get_num(), current_y());
+            pix_ = ix(get_num_from_command(), current_y());
         }
 
         auto set_y() -> void {
-            ix_ = ix(current_x(), get_num());
+            pix_ = ix(current_x(), get_num_from_command());
         }
 
         auto set_ch() -> void {
-            ch_ = get_ch();
+            ch_ = get_ch_from_command();
         }
 
         auto set_col() -> void {
-            auto t = get_num();
+            auto t = get_num_from_command();
             col_ = t >= sizeof_color_ ? t % sizeof_color_ : t;
         }
 
         auto draw_right() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x + move, y);
         }
 
         auto draw_left() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x - move, y);
         }
 
         auto draw_up() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x, y - move);
         }
 
         auto draw_down() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x, y + move);
         }
 
         auto draw_upper_left() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x - move, y - move);
         }
 
         auto draw_upper_right() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x + move, y - move);
         }
 
         auto draw_lower_right() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x + move, y + move);
         }
 
         auto draw_lower_left() -> void {
-            auto move = get_num();
+            auto move = get_num_from_command();
             auto [x, y] = current_xy();
             line(x - move, y + move);
         }
@@ -169,15 +173,19 @@ namespace g80 {
     private: 
 
         auto throw_if_end_is_reached() const -> void {
-            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
+            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(cix_));
         }
 
         auto throw_if_is_not_number() const -> void {
-            if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
+
+            if (is_not_number(command_[cix_])) {
+                std::cout << "- " << command_[cix_] << "\n";
+                throw("not a number\n");
+            }
         }
 
         auto throw_if_is_not_ch() const -> void {
-            if (is_not_ch(command_[ix_])) throw(std::string("Expecting a char command at i:") + std::to_string(ix_));
+            if (is_not_ch(command_[cix_])) throw(std::string("Expecting a char command at i:") + std::to_string(cix_));
         }
 
     private:
@@ -198,10 +206,10 @@ namespace g80 {
                     update_col();
 
                     if (t >= adx) {
-                        ix_ += sdy;
+                        pix_ += sdy;
                         t -= adx;
                     }
-                    ix_ +=sdx;
+                    pix_ +=sdx;
                 }
             } else {
                 for (int16_t i = 0, t = adx; i <= ady; ++i, t += adx) {
@@ -209,10 +217,10 @@ namespace g80 {
                     update_col();
                     
                     if (t >= ady) {
-                        ix_ += sdx;
+                        pix_ += sdx;
                         t -= ady;
                     }
-                    ix_ += sdy;
+                    pix_ += sdy;
                 }
             }
         }    
@@ -221,11 +229,11 @@ namespace g80 {
 
 
         inline auto current_x() const -> int16_t {
-            return ix_ % size_;
+            return pix_ % size_;
         }
         
         inline auto current_y() const -> int16_t {
-            return ix_ / size_;
+            return pix_ / size_;
         }
 
         inline auto current_xy() const -> std::tuple<int16_t, int16_t> {
@@ -238,15 +246,15 @@ namespace g80 {
         }
 
         inline auto end_is_reached() const -> bool {
-            return ix_ == command_.size();
+            return cix_ == command_.size();
         }
 
         inline auto end_is_not_reached() const -> bool {
-            return ix_ < command_.size();
+            return cix_ < command_.size();
         }
 
         inline auto skip_spaces() -> void {
-            while(end_is_not_reached() && command_[ix_] == ' ') ++ix_;
+            while(end_is_not_reached() && command_[cix_] == ' ') ++cix_;
         }
 
         inline auto is_number(const uint8_t ch) const -> bool {
@@ -266,17 +274,18 @@ namespace g80 {
         }
 
 
-        auto get_num() -> int16_t {
+        auto get_num_from_command() -> int16_t {
             
             skip_spaces();
             throw_if_end_is_reached();
             throw_if_is_not_number();            
             
             int16_t num = 0;
-            while (end_is_not_reached() && is_number(command_[ix_])) {
+            while (end_is_not_reached() && is_number(command_[cix_])) {
                 num *= 10;
-                num += command_[ix_++] - '0';
+                num += command_[cix_++] - '0';
             }
+            std::cout << "after while()\n";
 
             return num;
         }
@@ -284,32 +293,31 @@ namespace g80 {
         auto get_command() -> std::string {
             
             skip_spaces();
-            // TODO: improve confidence and remove throws
             throw_if_end_is_reached();
             throw_if_is_not_ch();            
             
             std::string command;
-            while (end_is_not_reached() && is_ch(command_[ix_])) command += command_[ix_++];
+            while (end_is_not_reached() && is_ch(command_[cix_])) command += command_[cix_++];
 
             return command;
         }
 
-        auto get_ch() -> uint8_t {
+        auto get_ch_from_command() -> uint8_t {
             
             skip_spaces();
             throw_if_end_is_reached();
             
-            return command_[ix_++];
+            return command_[cix_++];
         }
 
         auto update_ch() -> void {
-            if (ix_ >= size_) ix_ %= size_;
-            buffer_ch_[ix_] = ch_;
+            if (cix_ >= size_) pix_ %= size_;
+            buffer_ch_[pix_] = ch_;
         }
         
         auto update_col() -> void {
-            if (ix_ >= size_) ix_ %= size_;
-            buffer_col_[ix_] = col_;
+            if (cix_ >= size_) pix_ %= size_;
+            buffer_col_[pix_] = col_;
         }
 
         auto catch_all() -> void {
