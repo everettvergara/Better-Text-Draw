@@ -6,7 +6,7 @@ using namespace g80;
 auto main(const int argc, const char *argv[]) -> int {
     better_text_draw btd(130, 30, ' ', 7);
     btd.eval(
-        "x0y15"
+        "mlr10"
         "ch h col1 r1ur5u3ul1l1ll1d13r2ul3u2ur3r3lr2d4"
         "ch e col2 lr1ur2r5ur2u1ul2l2ll2d4lr1r3"
         "ch l col3 r3ur5u6ul1l1ll1d10lr1"
