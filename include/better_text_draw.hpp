@@ -256,34 +256,16 @@ namespace g80 {
             int16_t adx = dx < 0 ? dx * -1 : dx;
             int16_t ady = dy < 0 ? dy * -1 : dy;
             
-            if (adx >= ady) {    
-                for (int16_t i = 0, t = ady; i < adx; ++i, t += ady) {
-                    update_ch();
-                    update_col();
+            static const auto draw = [&](const int16_t adg, const int16_t sdg, const int16_t adl, const int16_t sdl) -> void {
+                for (int16_t i = 0, t = adl; i < adg; ++i, t += adl, pix_ +=sdg) {
+                    update_ch(); update_col();
+                    if (t >= adg) {pix_ += sdl; t -= adg;}
+                }
+            };
 
-                    if (t >= adx) {
-                        pix_ += sdy;
-                        t -= adx;
-                    }
-                    pix_ +=sdx;
-                }
-                update_ch();
-                update_col();
-            } else {
-                for (int16_t i = 0, t = adx; i < ady; ++i, t += adx) {
-                    update_ch();
-                    update_col();
-                    
-                    if (t >= ady) {
-                        pix_ += sdx;
-                        t -= ady;
-                    }
-                    pix_ += sdy;
-                }
-                update_ch();
-                update_col();                
-            }
-        }    
+            if (adx >= ady) draw(adx, sdx, ady, sdy);
+            else draw(ady, sdy, adx, sdx);
+        }
 
     private:
 
