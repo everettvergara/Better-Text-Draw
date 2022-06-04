@@ -45,19 +45,28 @@ namespace g80 {
             expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, *this);
         }
+
+        // TODO: check if command / ix need not be instance of the class
         auto eval() -> bool {
             try {
-
                 do {
-                    skip_spaces();
-
+                    std::string command = get_command();
+                    auto f = expression_map_.find(command);
+                    if (f == expression_map_.end()) {
+                        std::cout << "command not found -> " << command << std::endl;
+                        return false;
+                    }
                 } while (++ix_ != size_);
 
             } catch (std::exception e) {
                 std::cout << e.what() << std::endl;
+                return false;
             }
+
+            return true;
         }
-        auto show(bool clear_screen = false) -> void {
+
+        auto show(bool clear_screen = false) const -> void {
             // todo: all size vars should be changed to size_t
             std::stringstream output;
             if (clear_screen) output << "\033[2J";
@@ -237,7 +246,7 @@ namespace g80 {
         }
 
         inline auto skip_spaces() -> void {
-            while(end_is_not_reached() && command_[ix_++] == ' ');
+            while(end_is_not_reached() && command_[ix_] == ' ') ++ix_;
         }
 
         inline auto is_number(const uint8_t ch) const -> bool {
@@ -249,7 +258,7 @@ namespace g80 {
         }
 
         inline auto is_ch(const uint8_t ch) const -> bool {
-            return ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z';
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
         }
 
         inline auto is_not_ch(const uint8_t ch) const -> bool {
