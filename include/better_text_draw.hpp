@@ -77,7 +77,7 @@ namespace g80 {
         expression_map expression_map_;
 
         static const std::string color_[];
-        static const size_t sizeof_color;
+        static const size_t sizeof_color_;
             
     private:
 
@@ -95,7 +95,7 @@ namespace g80 {
 
         auto set_col() -> void {
             auto t = get_num();
-            col_ = t > sizeof_color_ ? t % sizeof_color : t;
+            col_ = t >= sizeof_color_ ? t % sizeof_color_ : t;
         }
 
         auto draw_right() -> void {
@@ -272,6 +272,6 @@ namespace g80 {
     };
 
     const std::string better_text_draw::color_[] { "\033[30m", "\033[31m", "\033[32m", "\033[33m", "\033[34m", "\033[35m", "\033[36m", "\033[37m" };
-    const size_t sizeof_color_{sizeof(color_) / sizeof(std::string)};
+    const size_t better_text_draw::sizeof_color_{sizeof(better_text_draw::color_) / sizeof(std::string)};
 }
 #endif 
