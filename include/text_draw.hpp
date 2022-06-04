@@ -11,20 +11,13 @@
 namespace g80 {
     
     using namespace std::placeholders;
-    using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
+    using expression_map = std::map<std::string, std::function<auto () -> void>>;
 
 
 
-    auto right(const std::string &command, uint16_t &i) -> bool {
-        get_num(command, i, num);
-        return i < command.size();
-    }
-    auto catch_all(const std::string &command, uint16_t i) -> bool {
-        return i < command.size();
-    }
-    
 
     class text_draw {
+
     public:
         text_draw(const uint16_t width, const uint16_t height, const std::string &command) : 
         width_(width),
@@ -33,23 +26,23 @@ namespace g80 {
         buffer_ch_(width_ * height_, ch_),
         buffer_col_(width_ * height_, col_),
         command_(command) {
-            expression_map_["x"] = std::bind(catch_all, _1, _2);
-            expression_map_["y"] = std::bind(catch_all, _1, _2);
-            expression_map_["ch"] = std::bind(catch_all, _1, _2);
-            expression_map_["col"] = std::bind(catch_all, _1, _2);
-            expression_map_["l"] = std::bind(catch_all, _1, _2);
-            expression_map_["r"] = std::bind(catch_all, _1, _2);
-            expression_map_["u"] = std::bind(catch_all, _1, _2);
-            expression_map_["d"] = std::bind(catch_all, _1, _2);
-            expression_map_["ul"] = std::bind(catch_all, _1, _2);
-            expression_map_["ur"] = std::bind(catch_all, _1, _2);
-            expression_map_["ll"] = std::bind(catch_all, _1, _2);
-            expression_map_["lr"] = std::bind(catch_all, _1, _2);
-            expression_map_["arc"] = std::bind(catch_all, _1, _2);
-            expression_map_["fil"] = std::bind(catch_all, _1, _2);
-            expression_map_["t"] = std::bind(catch_all, _1, _2);
-            expression_map_["tcx"] = std::bind(catch_all, _1, _2);
-            expression_map_["tcy"] = std::bind(catch_all, _1, _2);
+            expression_map_["x"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["y"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["ch"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["col"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["l"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["r"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["u"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["d"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["ul"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["ur"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["ll"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["lr"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["arc"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["fil"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["t"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["tcx"] = std::bind(&text_draw::catch_all, *this);
+            expression_map_["tcy"] = std::bind(&text_draw::catch_all, *this);
         }
 
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
@@ -63,21 +56,23 @@ namespace g80 {
         uint16_t ix_{0};
         uint16_t x_{0}, y_{0};
         uint16_t width_, height_, size_;
-        const std::string command_;
         std::vector<uint8_t> buffer_ch_;
         std::vector<uint8_t> buffer_col_;
+        const std::string command_;
         expression_map expression_map_;
 
-        inline auto end_is_reached -> bool {
+    private:
+        
+        inline auto end_is_reached() -> bool {
             return ix_ == command_.size();
         }
 
-        inline auto end_is_not_reached -> bool {
+        inline auto end_is_not_reached() -> bool {
             return ix_ < command_.size();
         }
 
         inline auto skip_spaces() -> void {
-            while(end_is_not_reached() && command[ix_++] == ' ');
+            while(end_is_not_reached() && command_[ix_++] == ' ');
         }
 
         inline auto is_number(const uint8_t ch) -> bool {
@@ -92,14 +87,18 @@ namespace g80 {
             uint16_t num = 0;
             skip_spaces();
             
-            if (end_is_reached() || is_not_number(command[ix_])) throw(std::string("Expecting a number at i:") + ix_ + ". btd cannot continue.");
+            if (end_is_reached() || is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + "x");
             
-            while (end_is_not_reached() && is_number(command[ix_])) {
+            while (end_is_not_reached() && is_number(command_[ix_])) {
                 num *= 10;
-                num += command[ix_++] - '0';
+                num += command_[ix_++] - '0';
             }
 
             return num;
+        }
+
+        auto catch_all() -> void {
+
         }
     };
 }
