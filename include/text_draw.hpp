@@ -14,15 +14,7 @@ namespace g80 {
     using namespace std::placeholders;
     
     using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
-    
-    inline auto i(const std::string &command, uint16_t &i) -> bool {
-        return ++i < command.size();
-    }
 
-    auto skip_spaces(const std::string &command, uint16_t &i) -> bool {
-        while(command[i] == ' ') if (++i == command.size()) return false;
-        return true;
-    }
 
     inline auto is_number(const uint8_t ch) -> bool {
         return ch >= '0' && ch <= '9';
@@ -57,12 +49,13 @@ namespace g80 {
 
     class text_draw {
     public:
-        text_draw(const uint16_t width, const uint16_t height) : 
+        text_draw(const uint16_t width, const uint16_t height, const std::string &command) : 
         width_(width),
         height_(height),
         size_(width_ * height_),
         buffer_ch_(width_ * height_, ch_),
-        buffer_col_(width_ * height_, col_) {
+        buffer_col_(width_ * height_, col_),
+        command_(command) {
             expression_map_["x"] = std::bind(catch_all, _1, _2);
             expression_map_["y"] = std::bind(catch_all, _1, _2);
             expression_map_["ch"] = std::bind(catch_all, _1, _2);
@@ -91,12 +84,21 @@ namespace g80 {
         uint8_t ch_{32};
         uint8_t col_{7};
         uint16_t ix_{0};
-        std::string command_;
         uint16_t x_{0}, y_{0};
         uint16_t width_, height_, size_;
+        const std::string command_;
         std::vector<uint8_t> buffer_ch_;
         std::vector<uint8_t> buffer_col_;
         expression_map expression_map_;
+
+        auto end_is_reached -> bool {
+            return ix_ == command_;
+        }
+
+        auto skip_spaces() -> bool {
+            while(command[ix_] == ' ') if (++ix_ == command.size()) return false;
+            return true;
+        }
     };
 }
 #endif 
