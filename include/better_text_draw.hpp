@@ -24,7 +24,7 @@ namespace g80 {
 
             expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
             expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
-            expression_map_["ch"] = std::bind(&better_text_draw::catch_all, *this);
+            expression_map_["ch"] = std::bind(&better_text_draw::set_ch, *this);
             expression_map_["col"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["l"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["r"] = std::bind(&better_text_draw::catch_all, *this);
@@ -59,6 +59,9 @@ namespace g80 {
         auto set_y() -> void {
             y_ = get_num();
         }
+        auto set_ch() -> void {
+            ch_ = get_ch();
+        }
 
     private:
         inline auto ix(const uint16_t x, const uint16_t y) const -> const uint16_t {
@@ -82,19 +85,27 @@ namespace g80 {
         }
         auto get_num() -> uint16_t {
             
-            uint16_t num = 0;
-            
             skip_spaces();
             
             if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
             if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
             
+            uint16_t num = 0;
             while (end_is_not_reached() && is_number(command_[ix_])) {
                 num *= 10;
                 num += command_[ix_++] - '0';
             }
 
             return num;
+        }
+        auto get_ch() -> uint8_t {
+            
+            skip_spaces();
+            
+            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
+            if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
+            
+            return command_[ix_++];
         }
 
         auto catch_all() -> void {
