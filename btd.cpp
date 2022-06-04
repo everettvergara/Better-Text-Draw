@@ -17,11 +17,7 @@ auto main(const int argc, const char *argv[]) -> int {
         "ch o col7 r5ur1r1ur2u1u2ul2l3ll2d4lr2r2"
         "ch r col3 r3ur5u3ul1l1ll1d1lr1r10ur1u1ul1l1ll1d7lr1"
         "ch l col2 r3ur5u6ul1l1ll1d10lr1"     
-        "ch o col4 r7ur1r1ur2u1u2ul2l3ll2d4lr2r5u13"   
-        
-        
-
-        
+        "ch d col4 r7ur1r1ur2u1u2ul2l3ll2d4lr2r5u13"        
         );
     btd.show();
 }
