@@ -25,7 +25,7 @@ namespace g80 {
             expression_map_["x"] = std::bind(&better_text_draw::set_x, *this);
             expression_map_["y"] = std::bind(&better_text_draw::set_y, *this);
             expression_map_["ch"] = std::bind(&better_text_draw::set_ch, *this);
-            expression_map_["col"] = std::bind(&better_text_draw::catch_all, *this);
+            expression_map_["col"] = std::bind(&better_text_draw::set_col, *this);
             expression_map_["l"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["r"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["u"] = std::bind(&better_text_draw::catch_all, *this);
@@ -56,11 +56,26 @@ namespace g80 {
         auto set_x() -> void {
             x_ = get_num();
         }
+
         auto set_y() -> void {
             y_ = get_num();
         }
+
         auto set_ch() -> void {
             ch_ = get_ch();
+        }
+        
+        auto set_col() -> void {
+            col_ = get_num();
+        }
+
+    private: 
+        auto throw_if_end_is_reached() -> void {
+            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
+        }
+
+        auto throw_if_is_not_number() -> void {
+            if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
         }
 
     private:
@@ -68,27 +83,32 @@ namespace g80 {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
         }
+
         inline auto end_is_reached() -> bool {
             return ix_ == command_.size();
         }
+
         inline auto end_is_not_reached() -> bool {
             return ix_ < command_.size();
         }
+
         inline auto skip_spaces() -> void {
             while(end_is_not_reached() && command_[ix_++] == ' ');
         }
+
         inline auto is_number(const uint8_t ch) -> bool {
             return ch >= '0' && ch <= '9';
         }
+
         inline auto is_not_number(const uint8_t ch) -> bool {
             return ch < '0' || ch > '9';
         }
+
         auto get_num() -> uint16_t {
             
             skip_spaces();
-            
-            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
-            if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
+            throw_if_end_is_reached();
+            throw_if_is_not_number();            
             
             uint16_t num = 0;
             while (end_is_not_reached() && is_number(command_[ix_])) {
@@ -98,12 +118,11 @@ namespace g80 {
 
             return num;
         }
+
         auto get_ch() -> uint8_t {
             
             skip_spaces();
-            
-            if (end_is_reached()) throw(std::string("End is reached at i:") + std::to_string(ix_));
-            if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
+            throw_if_end_is_reached();
             
             return command_[ix_++];
         }
