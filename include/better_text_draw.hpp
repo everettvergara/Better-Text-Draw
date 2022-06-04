@@ -20,8 +20,9 @@ namespace g80 {
     public:
 
         // THROW if size = 0
-        better_text_draw(const int16_t width, const int16_t height) : 
+        better_text_draw(const int16_t width, const int16_t height, const uint8_t ch = '.', const uint16_t col = 7) : 
             width_(width), height_(height), size_(width_ * height_),
+            ch_(ch), col_(col),
             buffer_ch_(width_ * height_, ch_),
             buffer_col_(width_ * height_, col_) {
 
@@ -88,10 +89,11 @@ namespace g80 {
         }
 
     private:
-        uint8_t ch_{32};
-        uint8_t col_{7};
+
         int16_t pix_{0};
         int16_t width_, height_, size_;
+        uint8_t ch_;
+        uint8_t col_;
         std::vector<uint8_t> buffer_ch_;
         std::vector<uint8_t> buffer_col_; 
         expression_map expression_map_;
@@ -258,7 +260,8 @@ namespace g80 {
             
             static const auto draw = [&](const int16_t adg, const int16_t sdg, const int16_t adl, const int16_t sdl) -> void {
                 for (int16_t i = 0, t = adl; i < adg; ++i, t += adl, pix_ +=sdg) {
-                    update_ch(); update_col();
+                    update_ch(); 
+                    update_col();
                     if (t >= adg) {pix_ += sdl; t -= adg;}
                 }
             };
