@@ -45,7 +45,18 @@ namespace g80 {
             expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, *this);
             expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, *this);
         }
+        auto eval() -> bool {
+            try {
 
+                do {
+                    skip_spaces();
+
+                } while (++ix_ != size_);
+
+            } catch (std::exception e) {
+                std::cout << e.what() << std::endl;
+            }
+        }
         auto show(bool clear_screen = false) -> void {
             // todo: all size vars should be changed to size_t
             std::stringstream output;
@@ -156,6 +167,10 @@ namespace g80 {
             if (is_not_number(command_[ix_])) throw(std::string("Expecting a number at i:") + std::to_string(ix_));
         }
 
+        auto throw_if_is_not_ch() const -> void {
+            if (is_not_ch(command_[ix_])) throw(std::string("Expecting a char command at i:") + std::to_string(ix_));
+        }
+
     private:
 
         auto line(const int16_t x, const int16_t y) -> void {
@@ -233,6 +248,15 @@ namespace g80 {
             return ch < '0' || ch > '9';
         }
 
+        inline auto is_ch(const uint8_t ch) const -> bool {
+            return ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z';
+        }
+
+        inline auto is_not_ch(const uint8_t ch) const -> bool {
+            return !is_ch(ch);
+        }
+
+
         auto get_num() -> int16_t {
             
             skip_spaces();
@@ -246,6 +270,19 @@ namespace g80 {
             }
 
             return num;
+        }
+
+        auto get_command() -> std::string {
+            
+            skip_spaces();
+            // TODO: improve confidence and remove throws
+            throw_if_end_is_reached();
+            throw_if_is_not_ch();            
+            
+            std::string command;
+            while (end_is_not_reached() && is_ch(command_[ix_])) command += command_[ix_++];
+
+            return command;
         }
 
         auto get_ch() -> uint8_t {
