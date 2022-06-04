@@ -20,6 +20,9 @@ auto main(const int argc, const char *argv[]) -> int {
         "ch d col4 r7ur1r1ur2u1u2ul2l3ll2d4lr2r5u13"        
         );
     btd.show();
+
+    std::string word1 = "123", word2 = "123";
+    std::cout << (word1 == word2 ? "equal" : "not equal") << std::endl;
 }
 
 
