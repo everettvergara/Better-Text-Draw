@@ -10,26 +10,11 @@
 
 namespace g80 {
     
-
     using namespace std::placeholders;
-    
     using expression_map = std::map<std::string, std::function<auto (const std::string &, uint16_t) -> bool>>;
 
 
-    auto get_num(const std::string &command, uint16_t &i, uint16_t &num) -> bool {
-        
-        uint16_t num = 0;
-        if (!skip_spaces(command, i)) return false;
-        if (is_not_number(command[i])) throw(std::string("Expecting a number at i:") + i + ". btd cannot continue.");
-        
-        while (is_number(command[i])) {
-            num *= 10;
-            num += command[i] - '0';
-            if (++i == command.size()) return false;
-        }
 
-        return true;
-    }
     auto right(const std::string &command, uint16_t &i) -> bool {
         get_num(command, i, num);
         return i < command.size();
@@ -88,7 +73,7 @@ namespace g80 {
         }
 
         inline auto end_is_not_reached -> bool {
-            return ix_ == command_.size();
+            return ix_ < command_.size();
         }
 
         inline auto skip_spaces() -> void {
@@ -103,6 +88,19 @@ namespace g80 {
             return ch < '0' || ch > '9';
         }
 
+        auto get_num() -> uint16_t {
+            uint16_t num = 0;
+            skip_spaces();
+            
+            if (end_is_reached() || is_not_number(command[ix_])) throw(std::string("Expecting a number at i:") + ix_ + ". btd cannot continue.");
+            
+            while (end_is_not_reached() && is_number(command[ix_])) {
+                num *= 10;
+                num += command[ix_++] - '0';
+            }
+
+            return num;
+        }
     };
 }
 #endif 
