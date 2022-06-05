@@ -19,6 +19,7 @@ namespace g80 {
     // Constructor Validator
     template<typename T, T less_than>
     class validator_if_less_than {
+    
     public:
         validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid dimensions"));}
         operator const T &(void) const {return n_;}   
