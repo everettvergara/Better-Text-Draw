@@ -31,6 +31,7 @@ namespace g80 {
             validator_if_less_than<int16_t, 1> width, 
             validator_if_less_than<int16_t, 1> height, 
             const uint8_t ch = '.', const uint16_t col = 7) : 
+
             width_(width), height_(height), size_(width_ * height_),
             ch_(ch), col_(col),
             buffer_ch_(width_ * height_, ch_),
@@ -65,26 +66,18 @@ namespace g80 {
             expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
         }
 
-        auto eval(const std::string &command) -> bool {
-            try {
-                int16_t cix = 0;
+        auto eval(const std::string &command) -> void {
+            int16_t cix = 0;
+            skip_spaces(command, cix);
+        
+            do {
+                std::string exp = get_command(command, cix);
+                auto f = expression_map_.find(exp);
+                if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> ") + exp + "\n");
+                
+                (f->second)(command, cix);
                 skip_spaces(command, cix);
-            
-                do {
-                    std::string exp = get_command(command, cix);
-                    auto f = expression_map_.find(exp);
-                    if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> ") + exp + "\n");
-                    
-                    (f->second)(command, cix);
-                    skip_spaces(command, cix);
-                } while (cix < command.size());
-
-                return true;
-
-            } catch (std::runtime_error e) {
-                std::cout << e.what() << std::endl;
-                return false;
-            }
+            } while (cix < command.size());
         }
 
         auto show(bool clear_screen = false) const -> void {
