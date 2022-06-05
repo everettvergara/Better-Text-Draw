@@ -21,7 +21,7 @@ namespace g80 {
     class validator_if_less_than {
     
     public:
-        validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid dimensions"));}
+        validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid int16_tensions"));}
         operator const T &(void) const {return n_;}   
     private:
         T n_;
@@ -63,7 +63,7 @@ namespace g80 {
             expression_map_["mll"] = std::bind(&better_text_draw::move_lower_left, this, _1, _2);
             expression_map_["mlr"] = std::bind(&better_text_draw::move_lower_right, this, _1, _2);
             
-            expression_map_["arc"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            expression_map_["circ"] = std::bind(&better_text_draw::draw_circle, this, _1, _2);
             expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             expression_map_["t"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
@@ -231,6 +231,11 @@ namespace g80 {
             pix_ = ix(x - move, y + move);
         }
 
+        auto draw_circle(const std::string &command, int16_t &cix) -> void {
+            auto r = get_num_from_command(command, cix);
+            circle(r);
+        }
+
         auto catch_all(const std::string &command, int16_t &cix) -> void {
 
         }
@@ -327,6 +332,45 @@ namespace g80 {
             else draw(ady, sdy, adx, sdx);
         }
 
+        auto circle(const int16_t r) -> void {
+            int16_t center_point = pix_;
+
+            int16_t x = r, y = 0;
+
+            int16_t bx = x * width_;
+            int16_t by = y * width_;
+
+            int16_t dx = 1 - (r << 1);
+            int16_t dy = 1;
+            int16_t re = 0;
+
+            static auto update_ch_and_col = [&](int16_t ix) {update_ch(ix); update_col(ix);};
+
+            while (x >= y)
+            {
+                update_ch_and_col(center_point + x - by);
+                update_ch_and_col(center_point + y - bx);
+                update_ch_and_col(center_point - y - bx);
+                update_ch_and_col(center_point - x - by);
+                update_ch_and_col(center_point + x + by);
+                update_ch_and_col(center_point + y + bx);
+                update_ch_and_col(center_point - y + bx);
+                update_ch_and_col(center_point - x + by);
+
+                ++y;
+                re += dy;
+                dy += 2;
+                if ((re << 1) + dx > 0)
+                {
+                    --x;
+                    bx -= width_;
+                    re += dx;
+                    dx += 2;
+                }
+                by += width_;
+            }
+        }
+
     private:
 
 
@@ -351,10 +395,20 @@ namespace g80 {
             if (pix_ >= size_) pix_ %= size_;
             buffer_ch_[pix_] = ch_;
         }
+
+        auto update_ch(int16_t pix) -> void {
+            if (pix >= size_) pix %= size_;
+            buffer_ch_[pix] = ch_;
+        }
         
         auto update_col() -> void {
             if (pix_ >= size_) pix_ %= size_;
             buffer_col_[pix_] = col_;
+        }
+
+        auto update_col(int16_t pix) -> void {
+            if (pix >= size_) pix %= size_;
+            buffer_col_[pix] = col_;
         }
     };
 
