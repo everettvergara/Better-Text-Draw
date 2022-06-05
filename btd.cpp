@@ -22,7 +22,7 @@
 
 using namespace g80;
 
-auto validate(const int argc, const char *argv[]) -> std::string {
+auto validate(const int argc, const char *argv[]) -> void {
 
     static std::string format = 
     "\n\n"
@@ -34,23 +34,19 @@ auto validate(const int argc, const char *argv[]) -> std::string {
         return true;
     };
 
-    if (argc < 3) return std::string("Must have width and height of the canvass.") + format;    
-    if (!is_number(argv[1])) return std::string("Please input a valid width for the canvass") + format;
-    if (!is_number(argv[2])) return std::string("Please input a valid height for the canvass") + format;
-    if (std::stoi(argv[1]) <= 0) return std::string("Valid width for canvass > 0") + format;
-    if (std::stoi(argv[2]) <= 0) return std::string("Valid height for canvass > 0") + format;
+    if (argc < 3) throw std::runtime_error(std::string("Must have width and height of the canvass.") + format);    
+    if (!is_number(argv[1])) throw std::runtime_error(std::string("Please input a valid width for the canvass") + format);
+    if (!is_number(argv[2])) throw std::runtime_error(std::string("Please input a valid height for the canvass") + format);
+    if (std::stoi(argv[1]) <= 0) throw std::runtime_error(std::string("Valid width for canvass > 0") + format);
+    if (std::stoi(argv[2]) <= 0) throw std::runtime_error(std::string("Valid height for canvass > 0") + format);
 
-    return "";
 }
 
 auto main(const int argc, const char *argv[]) -> int {
-    
-    if (auto msg = validate(argc, argv); msg.size() > 0) {
-        std::cout << msg << std::endl;
-        return -1;
-    }
 
     try {
+        validate(argc, argv);
+
         better_text_draw btd(130, 30, ' ', 7);
         btd.eval(
             "mlr10"
