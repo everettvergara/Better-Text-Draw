@@ -12,9 +12,11 @@
 
 namespace g80 {
     
+    // Type shortcuts
     using namespace std::placeholders;
     using expression_map = std::map<std::string, std::function<auto (const std::string &, int16_t &) -> void>>;
 
+    // Constructor Validator
     template<typename T, T less_than>
     class validator_if_less_than {
     public:
@@ -24,10 +26,11 @@ namespace g80 {
         T n_;
     };
 
+    // Better Text Draw Class
     class better_text_draw {
-
     public:
         better_text_draw(
+
             validator_if_less_than<int16_t, 1> width, 
             validator_if_less_than<int16_t, 1> height, 
             const uint8_t ch = '.', const uint16_t col = 7) : 
