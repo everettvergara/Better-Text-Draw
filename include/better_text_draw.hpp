@@ -32,8 +32,8 @@ namespace g80 {
     public:
         better_text_draw(
 
-            validator_if_less_than<int16_t, 1> width, 
-            validator_if_less_than<int16_t, 1> height, 
+            validator_if_less_than<int16_t, static_cast<int16_t>(1)> width, 
+            validator_if_less_than<int16_t, static_cast<int16_t>(1)> height, 
             const uint8_t ch = '.', const uint16_t col = 7) : 
 
             width_(width), height_(height), size_(width_ * height_),
@@ -84,7 +84,7 @@ namespace g80 {
             } while (cix < command.size());
         }
 
-        auto show(bool clear_screen = false) const -> void {
+        auto show(const bool clear_screen = false) const -> void {
             std::stringstream output;
             if (clear_screen) output << "\033[2J";
             
@@ -234,12 +234,6 @@ namespace g80 {
         auto catch_all(const std::string &command, int16_t &cix) -> void {
 
         }
-
-    /**
-     * Private static helpers 
-     * for public interface 
-     * 
-     */
 
     private: 
 
