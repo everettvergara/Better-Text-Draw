@@ -18,6 +18,7 @@
  */
 
 #include <iostream>
+#include <string>
 #include "better_text_draw.hpp"
 
 using namespace g80;
@@ -37,8 +38,8 @@ auto validate(const int argc, const char *argv[]) -> void {
     if (argc < 3) throw std::runtime_error(std::string("Must have width and height of the canvass.") + format);    
     if (!is_number(argv[1])) throw std::runtime_error(std::string("Please input a valid width for the canvass") + format);
     if (!is_number(argv[2])) throw std::runtime_error(std::string("Please input a valid height for the canvass") + format);
-    if (std::stoi(argv[1]) <= 0) throw std::runtime_error(std::string("Valid width for canvass > 0") + format);
-    if (std::stoi(argv[2]) <= 0) throw std::runtime_error(std::string("Valid height for canvass > 0") + format);
+    if (std::stoi(argv[1]) <= 0) throw std::runtime_error(std::string("Valid width for canvass shoud be > 0") + format);
+    if (std::stoi(argv[2]) <= 0) throw std::runtime_error(std::string("Valid height for canvass should be > 0") + format);
 
 }
 
@@ -47,22 +48,27 @@ auto main(const int argc, const char *argv[]) -> int {
     try {
         validate(argc, argv);
 
-        better_text_draw btd(130, 30, ' ', 7);
-        btd.eval(
-            "mlr10"
-            "ch h col1 r1ur5u3ul1l1ll1d13r2ul3u2ur3r3lr2d4"
-            "ch e col2 lr1ur2r5ur2u1ul2l2ll2d4lr1r3"
-            "ch l col3 r3ur5u6ul1l1ll1d10lr1"
-            "ch ! col4 r3ur5u6ul1l1ll1d10lr1r3"
-            "ch o col5 r5ur1r1ur2u1u2ul2l3ll2d4lr2r2"
-            "ch . col0 r5ur2"
-            "ch w col6 u4d4lr2r1ur2u4d4lr2r1ur2u4d4lr2"
-            "ch o col7 r5ur1r1ur2u1u2ul2l3ll2d4lr2r2"
-            "ch r col3 r3ur5u3ul1l1ll1d1lr1r10ur1u1ul1l1ll1d7lr1"
-            "ch l col2 r3ur5u6ul1l1ll1d10lr1"     
-            "ch d col4 r7ur1r1ur2u1u2ul2l3ll2d4lr2r5u13"
-            "ch + col 1 circ10circ15"        
-            );
+        std::string command;
+        std::cin >> command;
+
+        better_text_draw btd(std::stoi(argv[1]), std::stoi(argv[2]), ' ', 7);
+        btd.eval(command);
+        
+        // btd.eval(
+        //     "mlr10"
+        //     "ch h col1 r1ur5u3ul1l1ll1d13r2ul3u2ur3r3lr2d4"
+        //     "ch e col2 lr1ur2r5ur2u1ul2l2ll2d4lr1r3"
+        //     "ch l col3 r3ur5u6ul1l1ll1d10lr1"
+        //     "ch ! col4 r3ur5u6ul1l1ll1d10lr1r3"
+        //     "ch o col5 r5ur1r1ur2u1u2ul2l3ll2d4lr2r2"
+        //     "ch . col0 r5ur2"
+        //     "ch w col6 u4d4lr2r1ur2u4d4lr2r1ur2u4d4lr2"
+        //     "ch o col7 r5ur1r1ur2u1u2ul2l3ll2d4lr2r2"
+        //     "ch r col3 r3ur5u3ul1l1ll1d1lr1r10ur1u1ul1l1ll1d7lr1"
+        //     "ch l col2 r3ur5u6ul1l1ll1d10lr1"     
+        //     "ch d col4 r7ur1r1ur2u1u2ul2l3ll2d4lr2r5u13"
+        //     "ch + col 1 circ10circ15"        
+        //     );
         btd.show();
     
     } catch (std::runtime_error re) {
