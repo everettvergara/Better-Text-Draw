@@ -82,7 +82,7 @@
                 "-g3",
                 
                 // Maximum optimization -O3
-                // "-O3",
+                "-O3",
                 
                 // Assembly
                 // "-S",
