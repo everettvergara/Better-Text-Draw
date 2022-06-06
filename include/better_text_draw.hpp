@@ -393,6 +393,40 @@ namespace g80 {
             }
         }
 
+        auto fill() -> void {
+    
+            // The preferential method of fill is always stack over recursion, to prevent stackoverflow
+            // 
+            // The max stack allocation based on observation is (col - 1) x (row - 1) + 1
+            // Since this is known, it is better to use a std::vector instead of std::stack
+            // to represent a stack
+
+            // std::vector<Point> points((point.x - 1) * (point.y - 1) + 1);
+            // int si = -1;
+
+            // if (!border_check(index(point)))
+            //     points[++si] = point;;
+
+            // while (si >= 0) {
+            //     Point p = points[si--];
+
+            //     Dim ix = index(p);
+            //     tia_set(ix);
+
+            //     if (p.y - 1 >= 0 && !border_check(index({p.x, DIM(p.y - 1)})))
+            //         points[++si] = {p.x, DIM(p.y - 1)};
+
+            //     if (p.y + 1 < area_.h && !border_check(index({p.x, DIM(p.y + 1)})))
+            //         points[++si] = {p.x, DIM(p.y + 1)};
+
+            //     if (p.x - 1 >= 0 && !border_check(index({DIM(p.x - 1), p.y})))
+            //         points[++si] = {DIM(p.x - 1), p.y};
+
+            //     if (p.x + 1 < area_.w && !border_check(index({DIM(p.x + 1), p.y})))
+            //         points[++si] = {DIM(p.x + 1), p.y};
+            // }
+        }
+
     private:
 
 
