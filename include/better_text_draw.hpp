@@ -83,10 +83,10 @@ namespace g80 {
             expression_map_["mlr"] = std::bind(&better_text_draw::move_lower_right, this, _1, _2);
             
             expression_map_["circ"] = std::bind(&better_text_draw::draw_circle, this, _1, _2);
-            expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
-            expression_map_["t"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
-            expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
-            expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            // expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            // expression_map_["t"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            // expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            // expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
         }
 
         auto eval(const std::string &command) -> bool {
