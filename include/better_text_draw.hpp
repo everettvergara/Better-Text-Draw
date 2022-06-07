@@ -85,7 +85,7 @@ namespace g80 {
             expression_map_["circ"] = std::bind(&better_text_draw::draw_circle, this, _1, _2);
             expression_map_["fi"] = std::bind(&better_text_draw::fill_area, this, _1, _2);
             expression_map_["t"] = std::bind(&better_text_draw::place_text, this, _1, _2);
-            // expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            expression_map_["tcx"] = std::bind(&better_text_draw::place_text_cx, this, _1, _2);
             // expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
         }
 
@@ -266,7 +266,16 @@ namespace g80 {
             std::string text = get_string_from_command(command, cix);
             for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
                 if (pix_ > size_) pix_ = 0;
+                buffer_ch_[pix_] = text[i];
+                buffer_col_[pix_] = col_;
+            } 
+        }
 
+        auto place_text_cx(const std::string &command, int16_t &cix) -> void {
+            std::string text = get_string_from_command(command, cix);
+            pix_ = ix(width_ / 2, current_y());
+            for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
+                if (pix_ > size_) pix_ = 0;
                 buffer_ch_[pix_] = text[i];
                 buffer_col_[pix_] = col_;
             } 
