@@ -1,0 +1,5 @@
+x65
+y10
+col3
+t "Everett Gaius.... Vergara"
+q
