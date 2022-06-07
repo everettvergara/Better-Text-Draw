@@ -1,9 +1,13 @@
 x65
-y10
+y4
 col3
 t "Everett Gaius.... Vergara"
 t " xxx"
 col2
 y5
 tcx "-Hello Center-"
+col3
+tcy "Vertical Cntr"
+col4
+tcx "**Ultra Center**"
 q
