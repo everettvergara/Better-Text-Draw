@@ -84,7 +84,7 @@ namespace g80 {
             
             expression_map_["circ"] = std::bind(&better_text_draw::draw_circle, this, _1, _2);
             expression_map_["fi"] = std::bind(&better_text_draw::fill_area, this, _1, _2);
-            expression_map_["t"] = std::bind(&better_text_draw::place_text, this, _1, _2);
+            expression_map_["t"] = std::bind(&better_text_draw::place_text_xy, this, _1, _2);
             expression_map_["tcx"] = std::bind(&better_text_draw::place_text_cx, this, _1, _2);
             expression_map_["tcy"] = std::bind(&better_text_draw::place_text_cy, this, _1, _2);
             expression_map_["tcxy"] = std::bind(&better_text_draw::place_text_cxy, this, _1, _2);
@@ -264,44 +264,34 @@ namespace g80 {
             fill();
         }
 
-        auto place_text(const std::string &command, int16_t &cix) -> void {
+        auto place_text_xy(const std::string &command, int16_t &cix) -> void {
             std::string text = get_string_from_command(command, cix);
-            for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
-                if (pix_ > size_) pix_ = 0;
-                buffer_ch_[pix_] = text[i];
-                buffer_col_[pix_] = col_;
-            } 
+            place_text(command, cix, text, current_x(), current_y());
         }
 
         auto place_text_cx(const std::string &command, int16_t &cix) -> void {
             std::string text = get_string_from_command(command, cix);
-            pix_ = ix(width_ / 2 - text.size() / 2, current_y());
-            for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
-                if (pix_ > size_) pix_ = 0;
-                buffer_ch_[pix_] = text[i];
-                buffer_col_[pix_] = col_;
-            } 
+            place_text(command, cix, text, current_x() / 2, current_y());
         }
 
         auto place_text_cy(const std::string &command, int16_t &cix) -> void {
             std::string text = get_string_from_command(command, cix);
-            pix_ = ix(current_x(), height_ / 2);
-            for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
-                if (pix_ > size_) pix_ = 0;
-                buffer_ch_[pix_] = text[i];
-                buffer_col_[pix_] = col_;
-            } 
+            place_text(command, cix, text, current_x(), height_ / 2);
         }
 
         auto place_text_cxy(const std::string &command, int16_t &cix) -> void {
             std::string text = get_string_from_command(command, cix);
-            pix_ = ix(width_ / 2 - text.size() / 2, height_ / 2);
+            place_text(command, cix, text, width_ / 2 - text.size() / 2, height_ / 2);
+        }        
+
+        auto place_text(const std::string &command, int16_t &cix, const std::string &text, const int16_t x, const int16_t y) -> void {
+            pix_ = ix(x, y);
             for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
                 if (pix_ > size_) pix_ = 0;
                 buffer_ch_[pix_] = text[i];
                 buffer_col_[pix_] = col_;
-            } 
-        }        
+            }             
+        }
 
         auto catch_all(const std::string &command, int16_t &cix) -> void {
 
