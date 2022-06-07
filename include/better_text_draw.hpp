@@ -286,7 +286,7 @@ namespace g80 {
 
         auto place_text(const std::string &command, int16_t &cix, const std::string &text, const int16_t x, const int16_t y) -> void {
             pix_ = ix(x, y);
-            for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
+            for (int16_t i = 0; i < static_cast<int16_t>(text.size()); ++i, ++pix_) {
                 if (pix_ > size_) pix_ = 0;
                 buffer_ch_[pix_] = text[i];
                 buffer_col_[pix_] = col_;
@@ -316,7 +316,7 @@ namespace g80 {
         }
 
         static auto skip_spaces(const std::string &command, int16_t &cix) -> void {
-            while(cix < command.size() && command[cix] == ' ') ++cix;
+            while(cix < static_cast<int16_t>(command.size()) && command[cix] == ' ') ++cix;
         }
 
         static inline auto is_number(const uint8_t ch) -> bool {

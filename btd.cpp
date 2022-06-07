@@ -56,7 +56,7 @@ auto main(const int argc, const char *argv[]) -> int {
 
         btd.show();
     
-    } catch (std::runtime_error re) {
+    } catch (std::runtime_error &re) {
         std::cout << re.what() << std::endl;
     }
 }
