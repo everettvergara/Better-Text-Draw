@@ -28,7 +28,10 @@ auto validate(const int argc, const char *argv[]) -> void {
     static std::string format = 
     "\n\n"
     "Syntax:\n"
-    "btd {width} {height} < command_input_file\n";
+    "btd {width} {height} < command_input_file\n"
+    "\n"
+    "Visit the link below for full list of commands with description and samples:\n"
+    "https://github.com/everettvergara/BetterTextDraw\n\n";
 
     auto is_number = [&](const std::string &to_check) -> bool {
         for (auto &ch : to_check) if (!std::isdigit(ch)) return false;
@@ -57,6 +60,6 @@ auto main(const int argc, const char *argv[]) -> int {
         btd.show();
     
     } catch (std::runtime_error &re) {
-        std::cout << re.what() << std::endl;
+        std::cout << "\n" << re.what() << std::endl;
     }
 }
