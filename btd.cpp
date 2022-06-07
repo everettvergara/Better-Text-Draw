@@ -49,7 +49,7 @@ auto main(const int argc, const char *argv[]) -> int {
         validate(argc, argv);
 
         std::string command;
-        better_text_draw btd(std::stoi(argv[1]), std::stoi(argv[2]), '`', 7);
+        better_text_draw btd(std::stoi(argv[1]), std::stoi(argv[2]), ' ', 7);
         do {
             getline(std::cin, command);
         } while(btd.eval(command));

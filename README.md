@@ -39,8 +39,20 @@ Corresponds to move direction of the pointer {#} + 1 times.
 circ{#}
 Draws a circle with radius{#}.
 
-fil{#} (Not yet available as of this writing)
+fi{#}
 Fill all ' ' with the default ch and color.
+
+t "Your text here"
+Writes a text at the current position. Texts must be enclosed by "".
+
+tcx "Your text here centered horizontally"
+Writes a text at the current position of y but centered horizontally within the canvass.
+
+tcy "Your text here centered vertically"
+Writes a text at the current position of x but centered vertically within the canvass.
+
+tcxy "Your text here centered horizontally vertically"
+Writes a text at centered horizontally and vertically within the canvass.
 
 q
 quit the program.
