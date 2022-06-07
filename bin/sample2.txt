@@ -1,0 +1,9 @@
+x65
+y10
+ch *
+col 1
+circ8
+ch -
+col 2
+fi 
+q

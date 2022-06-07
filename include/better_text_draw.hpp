@@ -53,7 +53,7 @@ namespace g80 {
 
             validator_if_less_than<int16_t, static_cast<int16_t>(1)> width, 
             validator_if_less_than<int16_t, static_cast<int16_t>(1)> height, 
-            const uint8_t ch = '.', const uint16_t col = 7) : 
+            const uint8_t ch = ' ', const uint16_t col = 7) : 
 
             width_(width), height_(height), size_(width_ * height_),
             ch_(ch), col_(col),
@@ -97,7 +97,7 @@ namespace g80 {
                 std::string exp = get_command(command, cix);
                 if (exp == "q") return false;
                 auto f = expression_map_.find(exp);
-                if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> ") + exp + "\n");
+                if (f == expression_map_.end()) throw std::runtime_error(std::string("Could not evaluate -> {") + exp + "}\n");
                 
                 (f->second)(command, cix);
                 skip_spaces(command, cix);
@@ -407,6 +407,7 @@ namespace g80 {
                 auto [x, y] = points[si--];
                 auto i = ix(x, y);
                 if (buffer_ch_[i] == ' ') {buffer_ch_[i] = ch_; buffer_col_[i] = col_;}
+                
                 if (y - 1 >= 0 && buffer_ch_[ix(x, y - 1)] == ' ') points[++si] = {x, y - 1};
                 if (y + 1 < height_ && buffer_ch_[ix(x, y + 1)] == ' ') points[++si] = {x, y + 1};
                 if (x - 1 >= 0 && buffer_ch_[ix(x - 1, y)] == ' ') points[++si] = {x - 1, y};
@@ -417,11 +418,11 @@ namespace g80 {
     private:
 
         inline auto current_x() const -> int16_t {
-            return pix_ % size_;
+            return pix_ % width_;
         }
         
         inline auto current_y() const -> int16_t {
-            return pix_ / size_;
+            return pix_ / width_;
         }
 
         inline auto current_xy() const -> std::tuple<int16_t, int16_t> {
