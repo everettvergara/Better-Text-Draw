@@ -83,7 +83,7 @@ namespace g80 {
             expression_map_["mlr"] = std::bind(&better_text_draw::move_lower_right, this, _1, _2);
             
             expression_map_["circ"] = std::bind(&better_text_draw::draw_circle, this, _1, _2);
-            // expression_map_["fil"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
+            expression_map_["fi"] = std::bind(&better_text_draw::fill_area, this, _1, _2);
             // expression_map_["t"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             // expression_map_["tcx"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
             // expression_map_["tcy"] = std::bind(&better_text_draw::catch_all, this, _1, _2);
@@ -258,6 +258,10 @@ namespace g80 {
             circle(r);
         }
 
+        auto fill_area(const std::string &command, int16_t &cix) -> void {
+            fill();
+        }
+
         auto catch_all(const std::string &command, int16_t &cix) -> void {
 
         }
@@ -393,11 +397,11 @@ namespace g80 {
             }
         }
 
-        auto fill(int16_t sx, int16_t sy) -> void {
+        auto fill() -> void {
             std::vector<std::tuple<int16_t, int16_t>> points(size_);
             int16_t si = -1;
 
-            if (buffer_ch_[ix(sx, sy)] == ' ') points[++si] = {sx, sy};
+            if (buffer_ch_[ix()] == ' ') points[++si] = current_xy();
 
             while (si >= 0) {
                 auto [x, y] = points[si--];
@@ -427,6 +431,10 @@ namespace g80 {
         inline auto ix(const int16_t x, const int16_t y) const -> int16_t {
             auto t = y * width_ + x;
             return t >= size_ ? t % size_ : t;
+        }
+
+        inline auto ix() -> int16_t {
+            return (pix_ %= size_);
         }
 
         auto update_ch() -> void {
