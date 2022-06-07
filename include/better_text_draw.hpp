@@ -268,16 +268,20 @@ namespace g80 {
 
     private: 
 
-        static auto throw_if_end_is_reached(const std::string &command, const int16_t &cix) -> void {
+        static auto throw_if_end_is_reached(const std::string &command, const int16_t cix) -> void {
             if (cix == command.size()) throw std::runtime_error(std::string("End is reached at i:") + std::to_string(cix));
         }
 
-        static auto throw_if_is_not_number(const std::string &command, const int16_t &cix) -> void {
+        static auto throw_if_is_not_number(const std::string &command, const int16_t cix) -> void {
             if (is_not_number(command[cix])) throw std::runtime_error(std::string("Expecting a number at i:") + std::to_string(cix));
         }
 
-        static auto throw_if_is_not_ch(const std::string &command, const int16_t &cix) -> void {
+        static auto throw_if_is_not_ch(const std::string &command, const int16_t cix) -> void {
             if (is_not_ch(command[cix])) throw std::runtime_error(std::string("Expecting a char command at i:") + std::to_string(cix));
+        }
+
+        static auto throw_if_is_not_specific_ch(const std::string &command, const int16_t cix, const char ch) -> void {
+            if (command[cix] != ch) throw std::runtime_error(std::string("Expecting ") + ch + " at i:" + std::to_string(cix));
         }
 
         static auto skip_spaces(const std::string &command, int16_t &cix) -> void {
