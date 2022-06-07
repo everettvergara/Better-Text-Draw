@@ -357,10 +357,8 @@ namespace g80 {
             std::string str;
             while (cix < command.size()) {
                 if (command[cix] != '"' && command[cix] != '\n') str += command[cix++];
-                else ++cix;
-            } 
-            // std::cout << "{" << str << "} " <<  cix << ", " << command.size() << "}\n";
-            // exit(0);
+                else {++cix; break;}
+            }
             return str;
         }
 
