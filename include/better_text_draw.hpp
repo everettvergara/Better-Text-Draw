@@ -290,7 +290,7 @@ namespace g80 {
                 if (pix_ > size_) pix_ = 0;
                 buffer_ch_[pix_] = text[i];
                 buffer_col_[pix_] = col_;
-            }             
+            }
         }
 
         auto catch_all(const std::string &command, int16_t &cix) -> void {
