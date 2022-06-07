@@ -9,5 +9,5 @@ tcx "-Hello Center-"
 col3
 tcy "Vertical Cntr"
 col4
-tcx "**Ultra Center**"
+tcxy "**Ultra Center**"
 q
