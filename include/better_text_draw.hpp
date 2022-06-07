@@ -103,7 +103,7 @@ namespace g80 {
                 
                 (f->second)(command, cix);
                 skip_spaces(command, cix);
-            } while (cix < command.size());
+            } while (cix < static_cast<int16_t>(command.size()));
 
             return true;
         }
@@ -300,7 +300,7 @@ namespace g80 {
     private: 
 
         static auto throw_if_end_is_reached(const std::string &command, const int16_t cix) -> void {
-            if (cix == command.size()) throw std::runtime_error(std::string("End is reached at i:") + std::to_string(cix));
+            if (cix == static_cast<int16_t>(command.size())) throw std::runtime_error(std::string("End is reached at i:") + std::to_string(cix));
         }
 
         static auto throw_if_is_not_number(const std::string &command, const int16_t cix) -> void {
@@ -342,7 +342,7 @@ namespace g80 {
             throw_if_is_not_number(command, cix);            
             
             int16_t num = 0;
-            while (cix != command.size() && is_number(command[cix])) {
+            while (cix != static_cast<int16_t>(command.size()) && is_number(command[cix])) {
                 num *= 10;
                 num += command[cix++] - '0';
             }
@@ -356,7 +356,7 @@ namespace g80 {
             throw_if_is_not_ch(command, cix);            
             
             std::string val;
-            while (cix != command.size() && is_ch(command[cix])) val += command[cix++];
+            while (cix != static_cast<int16_t>(command.size()) && is_ch(command[cix])) val += command[cix++];
 
             return val;
         }
@@ -376,7 +376,7 @@ namespace g80 {
 
             // Find whichever comes first: ", \n, end of command  
             std::string str;
-            while (cix < command.size()) {
+            while (cix < static_cast<int16_t>(command.size())) {
                 if (command[cix] != '"' && command[cix] != '\n') str += command[cix++];
                 else {++cix; break;}
             }
