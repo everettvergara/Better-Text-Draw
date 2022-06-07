@@ -3,4 +3,7 @@ y10
 col3
 t "Everett Gaius.... Vergara"
 t " xxx"
+col2
+y5
+tcx "-Hello Center-"
 q

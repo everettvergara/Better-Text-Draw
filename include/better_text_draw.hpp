@@ -273,7 +273,7 @@ namespace g80 {
 
         auto place_text_cx(const std::string &command, int16_t &cix) -> void {
             std::string text = get_string_from_command(command, cix);
-            pix_ = ix(width_ / 2, current_y());
+            pix_ = ix(width_ / 2 - text.size() / 2, current_y());
             for (int16_t i = 0; i < text.size(); ++i, ++pix_) {
                 if (pix_ > size_) pix_ = 0;
                 buffer_ch_[pix_] = text[i];
