@@ -1,0 +1,10 @@
+ch|col7
+lr10ll10u10x1y5fi x1y0
+ch|col4
+r40d10l30ul9fi x1y20
+ch|col1
+r40u10
+l30
+ch|col1
+ll9fi
+q
