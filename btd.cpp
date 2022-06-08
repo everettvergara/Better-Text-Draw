@@ -22,7 +22,6 @@
 #include "better_text_draw.hpp"
 
 using namespace g80;
-
 auto validate(const int argc, const char *argv[]) -> void {
 
     static std::string format = 

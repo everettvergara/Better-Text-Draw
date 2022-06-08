@@ -397,9 +397,10 @@ namespace g80 {
             int16_t ady = dy < 0 ? dy * -1 : dy;
             
             static const auto draw = [&](const int16_t adg, const int16_t sdg, const int16_t adl, const int16_t sdl) -> void {
-                for (int16_t i = 0, t = adl; i < adg; ++i, t += adl, pix_ +=sdg) {
+                for (int16_t i = 0, t = adl; ;t += adl, pix_ +=sdg) {
                     update_ch(); 
                     update_col();
+                    if (++i >= adg) break;
                     if (t >= adg) {pix_ += sdl; t -= adg;}
                 }
             };
