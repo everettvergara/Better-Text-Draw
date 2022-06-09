@@ -40,7 +40,7 @@ namespace g80 {
     class validator_if_less_than {
     
     public:
-        validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid int16_tensions"));}
+        validator_if_less_than(const T &n) : n_(n) {if (n_ < less_than) throw std::runtime_error(std::string("Invalid parameter"));}
         operator const T &(void) const {return n_;}   
     private:
         T n_;
